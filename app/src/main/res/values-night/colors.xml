@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primaryColor">#A8C7FA</color>
+    <color name="google_blue">#A8C7FA</color>
+    <color name="toolbar_subtitle">#DCE6FF</color>
+    <color name="google_blue_container">#304461</color>
+    <color name="chart_bar_inactive">#6F91D0</color>
+    <color name="on_google_blue_container">#D3E3FD</color>
+
+    <color name="surface_light">#1E1F20</color>
+    <color name="background_light">#131314</color>
+    <color name="tonal_surface_light">#28292A</color>
+    <color name="outline_light">#444746</color>
+    <color name="on_surface_light">#E3E2E6</color>
+    <color name="on_surface_variant_light">#C4C7C5</color>
+
+    <color name="trend_positive_green">#81C995</color>
+    <color name="trend_positive_green_bg">#0F3D20</color>
+    <color name="trend_negative_red">#F28B82</color>
+    <color name="trend_negative_red_bg">#5C1B1B</color>
+    <color name="status_pending_amber">#FDD663</color>
+    <color name="status_pending_amber_bg">#4B3810</color>
+    <color name="status_processing_blue">#A8C7FA</color>
+    <color name="status_processing_blue_bg">#1F3A5F</color>
+</resources>

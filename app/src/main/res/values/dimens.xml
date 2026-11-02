@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Centered content widths keep forms and dashboard sections readable on wide windows. -->
+    <dimen name="auth_content_max_width">520dp</dimen>
+    <dimen name="dashboard_content_max_width">1280dp</dimen>
+</resources>

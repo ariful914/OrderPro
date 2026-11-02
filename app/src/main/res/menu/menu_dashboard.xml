@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_order_submit"
+        android:title="@string/order_submit"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_order_reports"
+        android:title="@string/order_reports"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_samples"
+        android:title="@string/samples"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_stock_info"
+        android:title="@string/stock_info"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_admin_panel"
+        android:title="@string/admin_panel"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_logout"
+        android:icon="@drawable/ic_logout"
+        android:title="Logout"
+        app:showAsAction="always" />
+</menu>

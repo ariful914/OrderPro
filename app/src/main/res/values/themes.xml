@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Material 3 Light Theme matching Google Apps Design -->
+    <style name="Theme.OrderPro" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/google_blue</item>
+        <item name="colorOnPrimary">@color/surface_light</item>
+        <item name="colorPrimaryContainer">@color/google_blue_container</item>
+        <item name="colorOnPrimaryContainer">@color/on_google_blue_container</item>
+        <item name="android:colorBackground">@color/background_light</item>
+        <item name="colorSurface">@color/surface_light</item>
+        <item name="colorSurfaceVariant">@color/tonal_surface_light</item>
+        <item name="colorOnSurface">@color/on_surface_light</item>
+        <item name="colorOnSurfaceVariant">@color/on_surface_variant_light</item>
+        <item name="colorOutline">@color/outline_light</item>
+    </style>
+
+    <style name="Theme.OrderPro.Starting" parent="Theme.OrderPro" />
+</resources>
