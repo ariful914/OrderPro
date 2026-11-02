@@ -25,6 +25,27 @@
         android:id="@+id/action_admin_panel"
         android:title="@string/admin_panel"
         app:showAsAction="never" />
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/action_theme"
+            android:title="@string/theme"
+            app:showAsAction="never">
+            <menu>
+                <item
+                    android:id="@+id/action_theme_system"
+                    android:checkable="true"
+                    android:title="@string/theme_system" />
+                <item
+                    android:id="@+id/action_theme_light"
+                    android:checkable="true"
+                    android:title="@string/theme_light" />
+                <item
+                    android:id="@+id/action_theme_dark"
+                    android:checkable="true"
+                    android:title="@string/theme_dark" />
+            </menu>
+        </item>
+    </group>
     <item
         android:id="@+id/action_logout"
         android:icon="@drawable/ic_logout"

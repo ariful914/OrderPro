@@ -1,13 +1,9 @@
 package com.arif.smartordermanagement.ui.operations;
 
-import android.graphics.Typeface;
 import android.os.Bundle;
-import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,17 +21,10 @@ import com.arif.smartordermanagement.ui.common.ReportHeaderFilterView;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
-import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import java.text.NumberFormat;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -61,8 +50,6 @@ public class OperationsFragment extends Fragment {
     public static final String TARGET_SUBMIT = "target_submit";
     public static final String TARGET_APPROVAL = "target_approval";
     public static final String TARGET_REPORT = "target_report";
-    private int hubTabIndex = -1;
-    private String activeTabDestination;
     public static final String STOCK_INFO = "stock_info";
     public static final String ADMIN_PANEL = "admin_panel";
     public static final String SPECIAL_REQUIREMENTS = "special_requirements";
@@ -73,6 +60,10 @@ public class OperationsFragment extends Fragment {
     private SalesTargetViewModel salesTargetViewModel;
     private SalesTargetSubmitController targetSubmitController;
     private SalesTargetReportController targetReportController;
+    private SampleOperationsController sampleOperationsController;
+    private OperationsTabComponent operationsTabComponent;
+    private OperationsUiComponents operationsUiComponents;
+    private SalesReportController salesReportController;
 
     public static OperationsFragment newInstance(String destination) {
         OperationsFragment fragment = new OperationsFragment();
@@ -95,6 +86,11 @@ public class OperationsFragment extends Fragment {
         String destination = getArguments() != null ? getArguments().getString(ARG_DESTINATION, ORDER_REPORTS) : ORDER_REPORTS;
         binding.operationsToolbar.setTitle(getPageTitle(destination));
         binding.operationsToolbar.setNavigationOnClickListener(v -> getParentFragmentManager().popBackStack());
+        binding.fabCreateTarget.setOnClickListener(v -> navigateTo(TARGET_SUBMIT));
+        operationsTabComponent = new OperationsTabComponent(requireContext(), binding.operationsContent);
+        operationsUiComponents = new OperationsUiComponents(
+                requireContext(), binding.operationsContent, this::navigateTo, this::showMessage);
+        salesReportController = new SalesReportController(operationsUiComponents);
         renderDestination(destination);
     }
 
@@ -154,16 +150,16 @@ public class OperationsFragment extends Fragment {
                 renderSalesReport(destination);
                 break;
             case SAMPLE_REQUEST:
-                renderSampleForm();
+                sampleOperations().renderRequest();
                 break;
             case SAMPLE_REPORT:
-                renderSampleReport();
+                sampleOperations().renderReport();
                 break;
             case SAMPLE_APPROVAL:
-                renderSampleApprovals();
+                sampleOperations().renderApprovals();
                 break;
             case SAMPLE_DELIVERY:
-                renderSampleDelivery();
+                sampleOperations().renderDelivery();
                 break;
             case STOCK_INFO:
                 renderStockInfo();
@@ -203,28 +199,7 @@ public class OperationsFragment extends Fragment {
     }
 
     private void addDestinationTabs(String[] labels, String[] destinations, String initialDestination) {
-        TabLayout tabs = new TabLayout(requireContext());
-        tabs.setTabMode(TabLayout.MODE_SCROLLABLE);
-        tabs.setTabGravity(TabLayout.GRAVITY_CENTER);
-        for (String label : labels) tabs.addTab(tabs.newTab().setText(label), false);
-
-        hubTabIndex = binding.operationsContent.getChildCount();
-        activeTabDestination = initialDestination;
-        binding.operationsContent.addView(tabs, paramsMatchWrap());
-        tabs.selectTab(tabs.getTabAt(indexOf(destinations, initialDestination)));
-        tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override public void onTabSelected(TabLayout.Tab tab) {
-                showHubPage(destinations[tab.getPosition()]);
-            }
-            @Override public void onTabUnselected(TabLayout.Tab tab) {}
-            @Override public void onTabReselected(TabLayout.Tab tab) {}
-        });
-        showHubPage(initialDestination);
-    }
-
-    private int indexOf(String[] values, String value) {
-        for (int i = 0; i < values.length; i++) if (values[i].equals(value)) return i;
-        return 0;
+        operationsTabComponent.show(labels, destinations, initialDestination, this::showHubPage);
     }
 
     private void showHubPage(String destination) {
@@ -236,8 +211,8 @@ public class OperationsFragment extends Fragment {
         targetReportController = null;
         binding.orderCartBar.setVisibility(View.GONE);
         binding.targetSubmitBar.setVisibility(View.GONE);
-        activeTabDestination = destination;
-        int contentStart = hubTabIndex + 1;
+        binding.fabCreateTarget.setVisibility(TARGET_REPORT.equals(destination) ? View.VISIBLE : View.GONE);
+        int contentStart = operationsTabComponent.getTabIndex() + 1;
         if (binding.operationsContent.getChildCount() > contentStart) {
             binding.operationsContent.removeViews(contentStart, binding.operationsContent.getChildCount() - contentStart);
         }
@@ -245,8 +220,9 @@ public class OperationsFragment extends Fragment {
     }
 
     private void refreshHubPage() {
-        if (hubTabIndex >= 0 && binding.operationsContent.getChildCount() > hubTabIndex) {
-            showHubPage(activeTabDestination);
+        if (operationsTabComponent.hasTabs()
+                && binding.operationsContent.getChildCount() > operationsTabComponent.getTabIndex()) {
+            showHubPage(operationsTabComponent.getActiveDestination());
         } else {
             binding.operationsContent.removeAllViews();
             renderDestination(getArguments() != null
@@ -256,15 +232,15 @@ public class OperationsFragment extends Fragment {
 
     private void renderTargetCenter() {
         String[] labels = {
-                getString(R.string.submit_sales_target),
-                getString(R.string.senior_approve_target),
-                getString(R.string.target_status_report)
+                "Approvals",
+                "History"
         };
-        String[] destinations = {TARGET_SUBMIT, TARGET_APPROVAL, TARGET_REPORT};
-        addDestinationTabs(labels, destinations, TARGET_SUBMIT);
+        String[] destinations = {TARGET_APPROVAL, TARGET_REPORT};
+        addDestinationTabs(labels, destinations, TARGET_REPORT);
     }
 
     private void renderTargetSubmit() {
+        binding.fabCreateTarget.setVisibility(View.GONE);
         binding.operationsToolbar.setTitle(R.string.submit_sales_target);
         if (salesTargetViewModel == null) {
             salesTargetViewModel = new ViewModelProvider(this).get(SalesTargetViewModel.class);
@@ -278,6 +254,7 @@ public class OperationsFragment extends Fragment {
     }
 
     private void renderTargetApproval() {
+        binding.fabCreateTarget.setVisibility(View.GONE);
         binding.operationsToolbar.setTitle(R.string.senior_approve_target);
         if (salesTargetViewModel == null) {
             salesTargetViewModel = new ViewModelProvider(this).get(SalesTargetViewModel.class);
@@ -289,6 +266,7 @@ public class OperationsFragment extends Fragment {
     }
 
     private void renderTargetReport() {
+        binding.fabCreateTarget.setVisibility(View.VISIBLE);
         binding.operationsToolbar.setTitle(R.string.target_status_report);
         if (salesTargetViewModel == null) {
             salesTargetViewModel = new ViewModelProvider(this).get(SalesTargetViewModel.class);
@@ -326,200 +304,18 @@ public class OperationsFragment extends Fragment {
         }
 
 
-        addDemoNotice();
-        addReportHeaderFilter(null);
-
-        if (ACTUAL_SALES.equals(destination)) {
-            double total = 0;
-            int count = 0;
-            for (DemoOperationsStore.OrderEntry order : DemoOperationsStore.getOrders()) {
-                if ("Today".equals(order.date)) {
-                    total += order.amount;
-                    count++;
-                }
-            }
-            addMetricCard("Today's sales", money(total), "Across " + count + " demo orders");
-            addSectionTitle("Recent sales");
-            for (DemoOperationsStore.OrderEntry order : DemoOperationsStore.getOrders()) {
-                addRecordCard(order.id + " · " + order.customer,
-                        order.product + " · " + order.quantity + " units",
-                        money(order.amount), order.status);
-            }
-            return;
-        }
-
-        if (CUSTOMER_SALES.equals(destination)) {
-            Map<String, Double> totals = new LinkedHashMap<>();
-            for (DemoOperationsStore.OrderEntry order : DemoOperationsStore.getOrders()) {
-                totals.put(order.customer, totals.getOrDefault(order.customer, 0.0) + order.amount);
-            }
-            addSectionTitle("Sales by customer");
-            for (Map.Entry<String, Double> entry : totals.entrySet()) {
-                addRecordCard(entry.getKey(), "Order value", money(entry.getValue()), null);
-            }
-            return;
-        }
-
-        if (PRODUCT_SALES.equals(destination)) {
-            Map<String, Double> totals = new LinkedHashMap<>();
-            for (DemoOperationsStore.OrderEntry order : DemoOperationsStore.getOrders()) {
-                totals.put(order.product, totals.getOrDefault(order.product, 0.0) + order.amount);
-            }
-            addSectionTitle("Sales by product");
-            for (Map.Entry<String, Double> entry : totals.entrySet()) {
-                addRecordCard(entry.getKey(), "Product revenue", money(entry.getValue()), null);
-            }
-            return;
-        }
-
-        addSectionTitle("Period comparison");
-        addMetricCard("This week", "৳24,850.00", "184 orders");
-        addComparisonRow("This week", 0.74f, "৳24,850");
-        addComparisonRow("Last week", 0.61f, "৳21,760");
-        addBodyText("Demo comparison: sales are up 14.2% from last week.");
+        salesReportController.render(destination);
     }
 
 
 
-    private void renderSampleForm() {
-        addDemoNotice();
-        TextInputEditText customer = addField("Customer or outlet", InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
-        TextInputEditText product = addField("Sample product", InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
-        TextInputEditText quantity = addField("Quantity", InputType.TYPE_CLASS_NUMBER);
-        TextInputEditText reason = addField("Reason or notes", InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
-
-        MaterialButton submit = addButton("Submit requisition");
-        submit.setOnClickListener(v -> {
-            String customerName = valueOf(customer);
-            String productName = valueOf(product);
-            String note = valueOf(reason);
-            int units;
-            try {
-                units = Integer.parseInt(valueOf(quantity));
-            } catch (NumberFormatException e) {
-                showMessage("Enter a valid quantity.");
-                return;
-            }
-
-            if (customerName.isEmpty() || productName.isEmpty() || note.isEmpty() || units <= 0) {
-                showMessage("Complete each field and enter a quantity greater than zero.");
-                return;
-            }
-
-            DemoOperationsStore.addSample(customerName, productName, units, note);
-            showMessage("Requisition saved to the demo report.");
-            customer.setText("");
-            product.setText("");
-            quantity.setText("");
-            reason.setText("");
-        });
-
-    }
-
-    private void renderSampleReport() {
-        addDemoNotice();
-        addReportHeaderFilter(filter -> {
-            // Header search filter callback
-        });
-        for (DemoOperationsStore.SampleEntry sample : DemoOperationsStore.getSamples()) {
-            addRecordCard(sample.id + " · " + sample.customer,
-                    sample.product + " · " + sample.quantity + " units · " + sample.reason,
-                    null, sample.status);
+    private SampleOperationsController sampleOperations() {
+        if (sampleOperationsController == null) {
+            sampleOperationsController = new SampleOperationsController(
+                    requireContext(), binding.operationsContent,
+                    this::refreshHubPage, this::showMessage);
         }
-    }
-
-    private void renderSampleApprovals() {
-        addDemoNotice();
-        int pendingCount = 0;
-        for (DemoOperationsStore.SampleEntry sample : DemoOperationsStore.getSamples()) {
-            if (!"Pending".equals(sample.status)) continue;
-            pendingCount++;
-
-            MaterialCardView card = createCard();
-            LinearLayout column = new LinearLayout(requireContext());
-            column.setOrientation(LinearLayout.VERTICAL);
-            column.setPadding(dp(16), dp(14), dp(16), dp(14));
-            column.addView(makeText(sample.id + " · " + sample.customer, 15,
-                    color(R.color.on_surface_light), true));
-            TextView details = makeText(sample.product + " · " + sample.quantity + " units", 14,
-                    color(R.color.on_surface_variant_light), false);
-            LinearLayout.LayoutParams detailParams = paramsMatchWrap();
-            detailParams.topMargin = dp(5);
-            column.addView(details, detailParams);
-            TextView reason = makeText(sample.reason, 13, color(R.color.on_surface_variant_light), false);
-            LinearLayout.LayoutParams reasonParams = paramsMatchWrap();
-            reasonParams.topMargin = dp(3);
-            column.addView(reason, reasonParams);
-
-            LinearLayout actions = new LinearLayout(requireContext());
-            actions.setOrientation(LinearLayout.HORIZONTAL);
-            actions.setGravity(android.view.Gravity.END);
-            LinearLayout.LayoutParams actionsParams = paramsMatchWrap();
-            actionsParams.topMargin = dp(12);
-            MaterialButton reject = new MaterialButton(requireContext());
-            reject.setText(R.string.reject);
-            reject.setAllCaps(false);
-            reject.setCornerRadius(dp(22));
-            reject.setTextColor(color(R.color.on_surface_variant_light));
-            reject.setStrokeColor(android.content.res.ColorStateList.valueOf(color(R.color.outline_light)));
-            reject.setStrokeWidth(dp(1));
-            reject.setBackgroundTintList(android.content.res.ColorStateList.valueOf(color(R.color.surface_light)));
-            MaterialButton approve = new MaterialButton(requireContext());
-            approve.setText(R.string.approve);
-            approve.setAllCaps(false);
-            approve.setCornerRadius(dp(22));
-            LinearLayout.LayoutParams approveParams = new LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            approveParams.setMarginStart(dp(8));
-            actions.addView(reject);
-            actions.addView(approve, approveParams);
-            column.addView(actions, actionsParams);
-            card.addView(column);
-            addCard(card);
-
-            reject.setOnClickListener(v -> decideSample(sample.id, "Rejected"));
-            approve.setOnClickListener(v -> decideSample(sample.id, "Approved"));
-        }
-        if (pendingCount == 0) {
-            TextView empty = makeText(getString(R.string.sample_approval_empty), 14,
-                    color(R.color.on_surface_variant_light), false);
-            empty.setPadding(dp(12), dp(16), dp(12), dp(16));
-            binding.operationsContent.addView(empty, paramsMatchWrap());
-        }
-
-    }
-
-    private void decideSample(String sampleId, String status) {
-        DemoOperationsStore.updateSampleStatus(sampleId, status);
-        refreshHubPage();
-        showMessage("Approved".equals(status)
-                ? getString(R.string.sample_approved_message)
-                : getString(R.string.sample_rejected_message));
-    }
-
-    private void renderSampleDelivery() {
-        addDemoNotice();
-        int readyCount = 0;
-        for (DemoOperationsStore.SampleEntry sample : DemoOperationsStore.getSamples()) {
-            if (!"Approved".equals(sample.status)) continue;
-            readyCount++;
-            addRecordCard(sample.id + " · " + sample.customer,
-                    sample.product + " · " + sample.quantity + " units · " + sample.reason,
-                    null, sample.status);
-            MaterialButton delivered = addButton(getString(R.string.mark_delivered));
-            delivered.setOnClickListener(v -> {
-                DemoOperationsStore.updateSampleStatus(sample.id, "Delivered");
-                refreshHubPage();
-                showMessage(getString(R.string.sample_delivered_message));
-            });
-        }
-        if (readyCount == 0) {
-            TextView empty = makeText(getString(R.string.no_samples_ready), 14,
-                    color(R.color.on_surface_variant_light), false);
-            empty.setPadding(dp(12), dp(16), dp(12), dp(16));
-            binding.operationsContent.addView(empty, paramsMatchWrap());
-        }
-
+        return sampleOperationsController;
     }
 
     private void renderStockInfo() {
@@ -570,219 +366,32 @@ public class OperationsFragment extends Fragment {
 
 
     private void addDemoNotice() {
-        TextView notice = makeText(getString(R.string.demo_data_notice), 12, color(R.color.on_google_blue_container), true);
-        notice.setPadding(dp(12), dp(10), dp(12), dp(10));
-        android.graphics.drawable.GradientDrawable background = new android.graphics.drawable.GradientDrawable();
-        background.setColor(color(R.color.google_blue_container));
-        background.setCornerRadius(dp(12));
-        notice.setBackground(background);
-        LinearLayout.LayoutParams params = paramsMatchWrap();
-        params.bottomMargin = dp(18);
-        binding.operationsContent.addView(notice, params);
+        operationsUiComponents.addDemoNotice();
     }
 
     private void addSectionTitle(String title) {
-        TextView heading = makeText(title, 18, color(R.color.on_surface_light), true);
-        LinearLayout.LayoutParams params = paramsMatchWrap();
-        params.topMargin = dp(8);
-        params.bottomMargin = dp(10);
-        binding.operationsContent.addView(heading, params);
+        operationsUiComponents.addSectionTitle(title);
     }
 
     private void addBodyText(String text) {
-        TextView body = makeText(text, 13, color(R.color.on_surface_variant_light), false);
-        LinearLayout.LayoutParams params = paramsMatchWrap();
-        params.topMargin = dp(12);
-        binding.operationsContent.addView(body, params);
+        operationsUiComponents.addBodyText(text);
     }
 
     private void addActionCard(String title, String description, String destination) {
-        MaterialCardView card = createCard();
-        LinearLayout row = new LinearLayout(requireContext());
-        row.setOrientation(LinearLayout.HORIZONTAL);
-        row.setGravity(android.view.Gravity.CENTER_VERTICAL);
-        row.setPadding(dp(16), dp(16), dp(16), dp(16));
-
-        LinearLayout textColumn = new LinearLayout(requireContext());
-        textColumn.setOrientation(LinearLayout.VERTICAL);
-        TextView titleView = makeText(title, 16, color(R.color.on_surface_light), true);
-        TextView descriptionView = makeText(description, 13, color(R.color.on_surface_variant_light), false);
-        LinearLayout.LayoutParams descParams = paramsMatchWrap();
-        descParams.topMargin = dp(4);
-        textColumn.addView(titleView);
-        textColumn.addView(descriptionView, descParams);
-        row.addView(textColumn, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
-
-        TextView arrow = makeText("›", 28, color(R.color.google_blue), false);
-        row.addView(arrow);
-        card.addView(row);
-        card.setClickable(true);
-        card.setFocusable(true);
-        card.setOnClickListener(v -> navigateTo(destination));
-        addCard(card);
+        operationsUiComponents.addActionCard(title, description, destination);
     }
 
     private void addRecordCard(String title, String detail, @Nullable String amount, @Nullable String status) {
-        MaterialCardView card = createCard();
-        LinearLayout column = new LinearLayout(requireContext());
-        column.setOrientation(LinearLayout.VERTICAL);
-        column.setPadding(dp(16), dp(14), dp(16), dp(14));
-
-        LinearLayout top = new LinearLayout(requireContext());
-        top.setGravity(android.view.Gravity.CENTER_VERTICAL);
-        TextView titleView = makeText(title, 15, color(R.color.on_surface_light), true);
-        top.addView(titleView, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
-        if (status != null) {
-            TextView statusView = makeText(status, 12, statusColor(status), true);
-            statusView.setPadding(dp(8), dp(4), dp(8), dp(4));
-            top.addView(statusView);
-        } else if (amount != null) {
-            top.addView(makeText(amount, 15, color(R.color.google_blue), true));
-        }
-
-        TextView detailView = makeText(detail, 13, color(R.color.on_surface_variant_light), false);
-        LinearLayout.LayoutParams detailParams = paramsMatchWrap();
-        detailParams.topMargin = dp(5);
-        column.addView(top);
-        column.addView(detailView, detailParams);
-        card.addView(column);
-        addCard(card);
+        operationsUiComponents.addRecordCard(title, detail, amount, status);
     }
 
     private void addMetricCard(String label, String value, String detail) {
-        MaterialCardView card = createCard();
-        LinearLayout column = new LinearLayout(requireContext());
-        column.setOrientation(LinearLayout.VERTICAL);
-        column.setPadding(dp(18), dp(18), dp(18), dp(18));
-        column.addView(makeText(label, 13, color(R.color.on_surface_variant_light), false));
-        TextView total = makeText(value, 26, color(R.color.google_blue), true);
-        LinearLayout.LayoutParams totalParams = paramsMatchWrap();
-        totalParams.topMargin = dp(4);
-        column.addView(total, totalParams);
-        TextView caption = makeText(detail, 13, color(R.color.on_surface_variant_light), false);
-        LinearLayout.LayoutParams captionParams = paramsMatchWrap();
-        captionParams.topMargin = dp(3);
-        column.addView(caption, captionParams);
-        card.addView(column);
-        addCard(card);
+        operationsUiComponents.addMetricCard(label, value, detail);
     }
 
-    private void addComparisonRow(String label, float progress, String value) {
-        LinearLayout row = new LinearLayout(requireContext());
-        row.setGravity(android.view.Gravity.CENTER_VERTICAL);
-        row.setOrientation(LinearLayout.HORIZONTAL);
-        TextView period = makeText(label, 14, color(R.color.on_surface_light), true);
-        row.addView(period, new LinearLayout.LayoutParams(dp(90), ViewGroup.LayoutParams.WRAP_CONTENT));
-        LinearProgressIndicator bar = new LinearProgressIndicator(requireContext());
-        bar.setMax(100);
-        bar.setProgressCompat((int) (progress * 100), false);
-        LinearLayout.LayoutParams barParams = new LinearLayout.LayoutParams(0, dp(8), 1f);
-        barParams.setMargins(dp(8), 0, dp(8), 0);
-        row.addView(bar, barParams);
-        row.addView(makeText(value, 13, color(R.color.on_surface_variant_light), false));
-        LinearLayout.LayoutParams rowParams = paramsMatchWrap();
-        rowParams.bottomMargin = dp(12);
-        binding.operationsContent.addView(row, rowParams);
-    }
-
-    private ReportHeaderFilterView addReportHeaderFilter(ReportHeaderFilterView.OnSearchClickListener onSearch) {
-        ReportHeaderFilterView filterView = new ReportHeaderFilterView(requireContext());
-        filterView.setOnSearchClickListener(filter -> {
-            new MaterialAlertDialogBuilder(requireContext())
-                    .setTitle("Confirm report filters")
-                    .setMessage(getFilterConfirmationText(filter))
-                    .setNegativeButton("Edit", (dialog, which) -> dialog.dismiss())
-                    .setPositiveButton("Search", (dialog, which) -> {
-                        if (onSearch != null) {
-                            onSearch.onSearch(filter);
-                        }
-                        showMessage("Search Filter applied: " + filter.getDisplayText());
-                    })
-                    .show();
-        });
-        LinearLayout.LayoutParams params = paramsMatchWrap();
-        params.bottomMargin = dp(16);
-        binding.operationsContent.addView(filterView, params);
-        return filterView;
-    }
-
-    private String getFilterConfirmationText(ReportFilter filter) {
-        String region = filter.getRegion() != null ? filter.getRegion().getName() : "All Regions";
-        String area = filter.getArea() != null ? filter.getArea().getName() : "All Areas";
-        String territory = filter.getTerritory() != null
-                ? filter.getTerritory().getName() : "All Territories";
-        return "Date: " + filter.getFromDate() + " – " + filter.getToDate()
-                + "\nRegion: " + region
-                + "\nArea: " + area
-                + "\nTerritory: " + territory
-                + "\n\nSearch with these filters?";
-    }
-
-    private TextInputEditText addField(String hint, int inputType) {
-        TextInputLayout layout = new TextInputLayout(requireContext());
-        layout.setHint(hint);
-        layout.setBoxBackgroundMode(TextInputLayout.BOX_BACKGROUND_OUTLINE);
-        float radius = dp(12);
-        layout.setBoxCornerRadii(radius, radius, radius, radius);
-
-        TextInputEditText input = new TextInputEditText(layout.getContext());
-        input.setInputType(inputType);
-        input.setTextSize(16);
-        input.setSingleLine(true);
-        if ((inputType & InputType.TYPE_CLASS_NUMBER) != 0) {
-            input.setInputType(inputType);
-        }
-        // Let TextInputLayout create compatible child layout parameters for its EditText.
-        layout.addView(input);
-
-        LinearLayout.LayoutParams params = paramsMatchWrap();
-        params.bottomMargin = dp(14);
-        binding.operationsContent.addView(layout, params);
-        return input;
-    }
-
-    private MaterialButton addButton(String text) {
-        MaterialButton button = new MaterialButton(requireContext());
-        button.setText(text);
-        button.setTextSize(15);
-        button.setAllCaps(false);
-        button.setCornerRadius(dp(26));
-        LinearLayout.LayoutParams params = paramsMatchWrap();
-        params.topMargin = dp(8);
-        params.bottomMargin = dp(8);
-        binding.operationsContent.addView(button, params);
-        return button;
-    }
-
-    private void addEmptyState() {
-        TextView empty = makeText("No demo invoices for this date.", 14, color(R.color.on_surface_variant_light), false);
-        empty.setPadding(dp(12), dp(16), dp(12), dp(16));
-        binding.operationsContent.addView(empty, paramsMatchWrap());
-    }
-
-    private MaterialCardView createCard() {
-        MaterialCardView card = new MaterialCardView(requireContext());
-        card.setCardBackgroundColor(color(R.color.surface_light));
-        card.setStrokeColor(color(R.color.outline_light));
-        card.setStrokeWidth(dp(1));
-        card.setRadius(dp(16));
-        card.setCardElevation(dp(1));
-        return card;
-    }
-
-    private void addCard(MaterialCardView card) {
-        LinearLayout.LayoutParams params = paramsMatchWrap();
-        params.bottomMargin = dp(12);
-        binding.operationsContent.addView(card, params);
-    }
-
-    private TextView makeText(String text, int sizeSp, int textColor, boolean bold) {
-        TextView view = new TextView(requireContext());
-        view.setText(text);
-        view.setTextSize(sizeSp);
-        view.setTextColor(textColor);
-        if (bold) view.setTypeface(view.getTypeface(), Typeface.BOLD);
-        return view;
+    private void addReportHeaderFilter(
+            ReportHeaderFilterView.OnSearchClickListener onSearch) {
+        operationsUiComponents.addReportHeaderFilter(onSearch);
     }
 
     private void navigateTo(String destination) {
@@ -797,40 +406,14 @@ public class OperationsFragment extends Fragment {
         Snackbar.make(binding.operationsContent, message, Snackbar.LENGTH_LONG).show();
     }
 
-    private String valueOf(TextInputEditText input) {
-        return input.getText() == null ? "" : input.getText().toString().trim();
-    }
-
-    private String money(double value) {
-        NumberFormat format = NumberFormat.getNumberInstance(Locale.US);
-        format.setMinimumFractionDigits(2);
-        format.setMaximumFractionDigits(2);
-        return "৳" + format.format(value);
-    }
-
-    private int statusColor(String status) {
-        if ("Approved".equals(status) || "Completed".equals(status)) return color(R.color.trend_positive_green);
-        if ("Pending".equals(status) || "Under review".equals(status)) return color(R.color.status_pending_amber);
-        if ("Rejected".equals(status)) return color(R.color.trend_negative_red);
-        return color(R.color.on_surface_variant_light);
-    }
-
-    private int color(int resourceId) {
-        return requireContext().getColor(resourceId);
-    }
-
-    private int dp(float value) {
-        return (int) (value * getResources().getDisplayMetrics().density + 0.5f);
-    }
-
-    private LinearLayout.LayoutParams paramsMatchWrap() {
-        return new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-    }
-
     @Override
     public void onDestroyView() {
         if (dailyInvoiceReportController != null) dailyInvoiceReportController.clear();
         dailyInvoiceReportController = null;
+        sampleOperationsController = null;
+        operationsTabComponent = null;
+        operationsUiComponents = null;
+        salesReportController = null;
         super.onDestroyView();
         binding = null;
     }

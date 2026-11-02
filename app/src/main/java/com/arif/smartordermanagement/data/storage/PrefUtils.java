@@ -36,6 +36,7 @@ public final class PrefUtils {
     private static final String KEY_SAVED_USERNAME = "KEY_SAVED_USERNAME";
     private static final String KEY_SAVED_PASSWORD = "KEY_SAVED_PASSWORD";
     private static final String SESSION_EXPIRES_AT = "session_expires_at";
+    private static final String THEME_MODE = "theme_mode";
 
     private static volatile PrefUtils instance;
     private final SharedPreferences preferences;
@@ -250,4 +251,7 @@ public final class PrefUtils {
     public void setStoreServiceEnabled(boolean enabled) { preferences.edit().putBoolean(KEY_STORE_SERVICE_ENABLED, enabled).apply(); }
     public long getLastUploadTime() { return preferences.getLong(KEY_LAST_UPLOAD_TIME, 0); }
     public void setLastUploadTime(long time) { preferences.edit().putLong(KEY_LAST_UPLOAD_TIME, time).apply(); }
+
+    public int getThemeMode() { return preferences.getInt(THEME_MODE, androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM); }
+    public void setThemeMode(int mode) { preferences.edit().putInt(THEME_MODE, mode).apply(); }
 }

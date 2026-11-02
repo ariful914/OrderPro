@@ -25,7 +25,9 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -49,7 +51,8 @@ public final class SalesTargetSubmitController {
         return format;
     }
 
-    private String selectedMonth = "November 2026";
+    private String selectedMonth;
+    private String nextMonth;
     private String selectedBrand = "All";
     private String searchQuery = "";
     private List<ProductInfo> productList = new ArrayList<>();
@@ -77,14 +80,19 @@ public final class SalesTargetSubmitController {
     }
 
     private void setupPeriodSelection() {
+        Calendar current = Calendar.getInstance();
+        Calendar following = (Calendar) current.clone();
+        following.add(Calendar.MONTH, 1);
+        SimpleDateFormat monthFormat = new SimpleDateFormat("MMMM yyyy", Locale.getDefault());
+        selectedMonth = monthFormat.format(current.getTime());
+        nextMonth = monthFormat.format(following.getTime());
+
+        binding.chipMonthCurrent.setText(selectedMonth);
+        binding.chipMonthNext.setText(nextMonth);
         binding.chipGroupTargetMonth.setOnCheckedStateChangeListener((group, checkedIds) -> {
             if (checkedIds.isEmpty()) return;
-            int checkedId = checkedIds.get(0);
-            if (checkedId == binding.chipMonthNext.getId()) {
-                selectedMonth = "December 2026";
-            } else {
-                selectedMonth = "November 2026";
-            }
+            selectedMonth = checkedIds.get(0) == binding.chipMonthNext.getId()
+                    ? nextMonth : monthFormat.format(current.getTime());
         });
     }
 
@@ -227,11 +235,12 @@ public final class SalesTargetSubmitController {
                 }
             }
 
-            // Search filter
+            // Search product name, SKU, brand, or pack size; API fields may be absent.
             if (!searchQuery.isEmpty()) {
-                boolean matches = product.getProductName().toLowerCase(Locale.ROOT).contains(searchQuery)
-                        || product.getProductCode().toLowerCase(Locale.ROOT).contains(searchQuery)
-                        || product.getBrandName().toLowerCase(Locale.ROOT).contains(searchQuery);
+                boolean matches = containsQuery(product.getProductName())
+                        || containsQuery(product.getProductCode())
+                        || containsQuery(product.getBrandName())
+                        || containsQuery(product.getPackSize());
                 if (!matches) continue;
             }
 
@@ -298,6 +307,10 @@ public final class SalesTargetSubmitController {
             empty.setGravity(android.view.Gravity.CENTER);
             list.addView(empty);
         }
+    }
+
+    private boolean containsQuery(String value) {
+        return value != null && value.toLowerCase(Locale.ROOT).contains(searchQuery);
     }
 
     private String formatMoney(double amount) {

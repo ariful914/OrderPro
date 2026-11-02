@@ -8,10 +8,12 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.arif.smartordermanagement.R;
+import com.arif.smartordermanagement.data.storage.PrefUtils;
 import com.arif.smartordermanagement.databinding.FragmentDashboardBinding;
 import com.arif.smartordermanagement.databinding.ItemKpiCardBinding;
 import com.arif.smartordermanagement.model.CategorySales;
@@ -74,10 +76,20 @@ public class DashboardFragment extends Fragment {
 
     private void setupToolbar() {
         binding.toolbar.inflateMenu(R.menu.menu_dashboard);
+        updateThemeMenuSelection();
 
         binding.toolbar.setOnMenuItemClickListener(item -> {
             int itemId = item.getItemId();
-            if (itemId == R.id.action_logout) {
+            if (itemId == R.id.action_theme_system) {
+                applyTheme(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+                return true;
+            } else if (itemId == R.id.action_theme_light) {
+                applyTheme(AppCompatDelegate.MODE_NIGHT_NO);
+                return true;
+            } else if (itemId == R.id.action_theme_dark) {
+                applyTheme(AppCompatDelegate.MODE_NIGHT_YES);
+                return true;
+            } else if (itemId == R.id.action_logout) {
                 viewModel.logout();
                 return true;
             }
@@ -118,6 +130,21 @@ public class DashboardFragment extends Fragment {
                 binding.tvUserDesignation.setText(user.getRole() + " • " + user.getCompanyName());
             }
         });
+    }
+
+    private void updateThemeMenuSelection() {
+        int mode = PrefUtils.getInstance(requireContext()).getThemeMode();
+        int selectedItem = mode == AppCompatDelegate.MODE_NIGHT_NO
+                ? R.id.action_theme_light
+                : mode == AppCompatDelegate.MODE_NIGHT_YES
+                ? R.id.action_theme_dark
+                : R.id.action_theme_system;
+        binding.toolbar.getMenu().findItem(selectedItem).setChecked(true);
+    }
+
+    private void applyTheme(int mode) {
+        PrefUtils.getInstance(requireContext()).setThemeMode(mode);
+        AppCompatDelegate.setDefaultNightMode(mode);
     }
 
     private String getTimeBasedGreeting() {

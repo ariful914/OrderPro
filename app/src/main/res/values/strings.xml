@@ -12,6 +12,10 @@
     <string name="quick_demo_signin">Continue with demo account</string>
     <string name="secured_by_orderpro">Secure sign-in with OrderPro</string>
     <string name="sales_dashboard_title">OrderPro Sales</string>
+    <string name="theme">Theme</string>
+    <string name="theme_system">Use system setting</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
     <string name="sales_dashboard_subtitle">Sales dashboard</string>
     <string name="at_a_glance">Sales overview</string>
     <string name="dashboard_quick_actions">Workspace</string>
@@ -96,6 +100,8 @@
 
     <!-- Sales Target Strings -->
     <string name="sales_target">Sales Target</string>
+    <string name="create_target">Create target</string>
+    <string name="create_sales_target_description">Create a sales target</string>
     <string name="sales_target_center">Target Management</string>
     <string name="submit_sales_target">Submit Sales Target</string>
     <string name="senior_approve_target">Senior Approved Target</string>
