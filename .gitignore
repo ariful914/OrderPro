@@ -13,3 +13,30 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+
+
+# Build Artifacts
+/target/
+build/
+*.class
+*.jar
+*.war
+
+# IDE Files
+.idea/
+*.iml
+.vscode/
+.project
+.classpath
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Memory Dumps
+*.hprof
+
+# Logs
+*.log
+logs/
