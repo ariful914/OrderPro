@@ -14,7 +14,9 @@ import com.arif.smartordermanagement.model.SalesInvoice;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Locale;
 
 import retrofit2.Call;
@@ -82,14 +84,17 @@ public final class DailyInvoiceReportViewModel extends AndroidViewModel {
         public final String error;
         public final BigDecimal sales;
         public final BigDecimal discount;
-        public final BigDecimal due;
+        public final BigDecimal additionalDiscount;
+        public final Map<String, BigDecimal> brandTotals;
         public final int acceptedCount;
         public final int pendingCount;
         public final int returnCount;
 
         private UiState(List<SalesInvoice> invoices, String selectedStatus, boolean hasSearched,
                         boolean isLoading, String error, BigDecimal sales, BigDecimal discount,
-                        BigDecimal due, int acceptedCount, int pendingCount, int returnCount) {
+                        BigDecimal additionalDiscount, Map<String, BigDecimal> brandTotals,
+                        int acceptedCount,
+                        int pendingCount, int returnCount) {
             this.invoices = invoices;
             this.selectedStatus = selectedStatus;
             this.isLoading = isLoading;
@@ -97,7 +102,8 @@ public final class DailyInvoiceReportViewModel extends AndroidViewModel {
             this.error = error;
             this.sales = sales;
             this.discount = discount;
-            this.due = due;
+            this.additionalDiscount = additionalDiscount;
+            this.brandTotals = brandTotals;
             this.acceptedCount = acceptedCount;
             this.pendingCount = pendingCount;
             this.returnCount = returnCount;
@@ -111,7 +117,13 @@ public final class DailyInvoiceReportViewModel extends AndroidViewModel {
                                       boolean hasSearched, boolean isLoading, String error) {
             BigDecimal sales = BigDecimal.ZERO;
             BigDecimal discount = BigDecimal.ZERO;
-            BigDecimal due = BigDecimal.ZERO;
+            BigDecimal additionalDiscount = BigDecimal.ZERO;
+            Map<String, BigDecimal> brandTotals = new LinkedHashMap<>();
+            brandTotals.put("Avene", BigDecimal.ZERO);
+            brandTotals.put("Biumark", BigDecimal.ZERO);
+            brandTotals.put("Bionnex", BigDecimal.ZERO);
+            brandTotals.put("Cosmed", BigDecimal.ZERO);
+            brandTotals.put("Wahib", BigDecimal.ZERO);
             int accepted = 0, pending = 0, returned = 0;
 
             for (SalesInvoice invoice : invoices) {
@@ -122,13 +134,24 @@ public final class DailyInvoiceReportViewModel extends AndroidViewModel {
 
                 if (!matches(selectedStatus, status)) continue;
                 sales = sales.add(amount(invoice.getInvoiceValue()));
-                discount = discount.add(amount(invoice.getDiscountValue()))
-                        .add(amount(invoice.getAdditionalDiscount()));
-                due = due.add(amount(invoice.getPayableAmount()));
+                discount = discount.add(amount(invoice.getDiscountValue()));
+                additionalDiscount = additionalDiscount.add(amount(invoice.getAdditionalDiscount()));
+                addBrand(brandTotals, "Avene", invoice.getAveneAmount());
+                addBrand(brandTotals, "Biumark", invoice.getBiumarkAmount());
+                addBrand(brandTotals, "Bionnex", invoice.getBionnexAmount());
+                addBrand(brandTotals, "Cosmed", invoice.getCosmedAmount());
+                addBrand(brandTotals, "Wahib", invoice.getWahibAmount());
             }
 
             return new UiState(invoices, selectedStatus, hasSearched, isLoading, error,
-                    sales, discount, due, accepted, pending, returned);
+                    sales, discount, additionalDiscount,
+                    Collections.unmodifiableMap(brandTotals), accepted, pending, returned);
+        }
+
+        private static void addBrand(Map<String, BigDecimal> totals, String brand, String value) {
+            BigDecimal total = totals.get(brand);
+            if (total == null) total = BigDecimal.ZERO;
+            totals.put(brand, total.add(amount(value)));
         }
 
         private static boolean matches(String filter, String status) {

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Responsive Layout Spacings for Tablets & Foldables (width >= 600dp) -->
+    <dimen name="screen_padding">24dp</dimen>
+    <dimen name="card_padding">20dp</dimen>
+    <dimen name="card_margin_bottom">12dp</dimen>
+    <dimen name="badge_padding_horizontal">12dp</dimen>
+    <dimen name="badge_padding_vertical">5dp</dimen>
+</resources>

@@ -25,6 +25,7 @@ public class SalesInvoice {
     @SerializedName("employee_name") private String employeeName;
     private String avene;
     private String biumark;
+    @SerializedName("bionnex") private String bionnex;
     private String carex;
     private String wahib;
     private String cosmed;
@@ -43,10 +44,16 @@ public class SalesInvoice {
     public String getInvoiceDate() { return text(invoiceDate); }
     public String getUsername() { return text(username); }
     public String getEmployeeName() { return text(employeeName); }
+    public String getAveneAmount() { return amountValue(avene); }
+    public String getBiumarkAmount() { return amountValue(biumark); }
+    public String getBionnexAmount() { return amountValue(bionnex); }
+    public String getCosmedAmount() { return amountValue(cosmed); }
+    public String getWahibAmount() { return amountValue(wahib); }
     public String getBrandTotals() {
         List<String> brands = new ArrayList<>();
         addBrand(brands, "Avene", avene);
         addBrand(brands, "Biumark", biumark);
+        addBrand(brands, "Bionnex", bionnex);
         addBrand(brands, "Carex", carex);
         addBrand(brands, "Wahib", wahib);
         addBrand(brands, "Cosmed", cosmed);

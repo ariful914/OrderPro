@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Material 3 Light Theme matching Google Apps Design -->
+    <!-- Material 3 Expressive Theme -->
     <style name="Theme.OrderPro" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorPrimary">@color/google_blue</item>
         <item name="colorOnPrimary">@color/surface_light</item>
@@ -12,6 +12,23 @@
         <item name="colorOnSurface">@color/on_surface_light</item>
         <item name="colorOnSurfaceVariant">@color/on_surface_variant_light</item>
         <item name="colorOutline">@color/outline_light</item>
+
+        <!-- Material 3 Expressive Shapes -->
+        <item name="shapeAppearanceCornerSmall">@style/ShapeAppearance.OrderPro.SmallComponent</item>
+        <item name="shapeAppearanceCornerMedium">@style/ShapeAppearance.OrderPro.MediumComponent</item>
+        <item name="shapeAppearanceCornerLarge">@style/ShapeAppearance.OrderPro.LargeComponent</item>
+    </style>
+
+    <style name="ShapeAppearance.OrderPro.SmallComponent" parent="ShapeAppearance.Material3.Corner.Small">
+        <item name="cornerSize">10dp</item>
+    </style>
+
+    <style name="ShapeAppearance.OrderPro.MediumComponent" parent="ShapeAppearance.Material3.Corner.Medium">
+        <item name="cornerSize">18dp</item>
+    </style>
+
+    <style name="ShapeAppearance.OrderPro.LargeComponent" parent="ShapeAppearance.Material3.Corner.Large">
+        <item name="cornerSize">24dp</item>
     </style>
 
     <style name="Theme.OrderPro.Starting" parent="Theme.OrderPro" />

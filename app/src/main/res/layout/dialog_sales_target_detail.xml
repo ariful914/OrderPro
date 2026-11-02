@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/surface_light"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <!-- Header -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@id/tvDetailStatusBadge"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvDetailTargetId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TGT-202611-102"
+                android:textColor="@color/google_blue"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvDetailTargetMonth"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="Target Period: November 2026"
+                android:textColor="@color/on_surface_light"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvDetailStatusBadge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/shape_rounded_badge"
+            android:backgroundTint="@color/status_pending_amber_bg"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="4dp"
+            android:text="Pending"
+            android:textColor="@color/status_pending_amber"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <!-- Audit Details Card -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        app:cardBackgroundColor="@color/tonal_surface_light"
+        app:cardCornerRadius="@dimen/card_corner_radius_expressive"
+        app:cardElevation="0dp"
+        app:strokeColor="@color/outline_light"
+        app:strokeWidth="1dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <TextView
+                android:id="@+id/tvDetailSubmitterInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Submitted by: Kamrul Hasan (Territory Officer) · 01/11/2026"
+                android:textColor="@color/on_surface_light"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tvDetailApprovalInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Awaiting senior review"
+                android:textColor="@color/on_surface_variant_light"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Products List in ScrollView -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:layout_marginBottom="6dp"
+        android:text="Target Products Breakdown:"
+        android:textColor="@color/on_surface_light"
+        android:textSize="13sp"
+        android:textStyle="bold" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxHeight="260dp">
+
+        <LinearLayout
+            android:id="@+id/detailProductsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Total Highlights -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/shape_rounded_badge"
+        android:backgroundTint="@color/google_blue_container"
+        android:orientation="horizontal"
+        android:padding="12dp">
+
+        <TextView
+            android:id="@+id/tvDetailTotalUnits"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Total: 485 units"
+            android:textColor="@color/on_google_blue_container"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvDetailTotalAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Value: ৳684,200.00"
+            android:textColor="@color/google_blue"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <!-- Remarks / Notes -->
+    <TextView
+        android:id="@+id/tvDetailRemarks"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/on_surface_variant_light"
+        android:textSize="12sp"
+        android:textStyle="italic" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnDetailClose"
+        style="@style/Widget.Material3.Button"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:text="Close"
+        app:cornerRadius="24dp" />
+</LinearLayout>

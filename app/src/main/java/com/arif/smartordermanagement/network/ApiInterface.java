@@ -4,8 +4,10 @@ import com.arif.smartordermanagement.model.ApiResponse;
 import com.arif.smartordermanagement.model.CategorySales;
 import com.arif.smartordermanagement.model.KpiMetric;
 import com.arif.smartordermanagement.model.Order;
-import com.arif.smartordermanagement.model.SalesTrend;
+import com.arif.smartordermanagement.model.ProductInfo;
 import com.arif.smartordermanagement.model.SalesInvoice;
+import com.arif.smartordermanagement.model.SalesTarget;
+import com.arif.smartordermanagement.model.SalesTrend;
 import com.arif.smartordermanagement.model.User;
 import com.google.gson.annotations.SerializedName;
 
@@ -42,6 +44,18 @@ public interface ApiInterface {
 
     @POST("sales-report/sales")
     Call<ApiResponse<List<SalesInvoice>>> getSalesReport(@Body SalesReportRequest request);
+
+    @POST(Constants.GET_PRODUCT_LIST)
+    Call<ApiResponse<List<ProductInfo>>> getProductData(@Body User user);
+
+    @POST(Constants.SUBMIT_SALES_TARGET)
+    Call<ApiResponse<SalesTarget>> submitSalesTarget(@Body SalesTarget target);
+
+    @POST(Constants.APPROVE_SALES_TARGET)
+    Call<ApiResponse<SalesTarget>> approveSalesTarget(@Body ApproveTargetRequest request);
+
+    @POST(Constants.GET_TARGET_STATUS_REPORT)
+    Call<ApiResponse<List<SalesTarget>>> getTargetStatusReport(@Body User user);
 
     final class SalesReportRequest {
         @SerializedName("user_id") public final int userId;
@@ -102,6 +116,28 @@ public interface ApiInterface {
         public OrderLineRequest(String productSku, int quantity) {
             this.productSku = productSku;
             this.quantity = quantity;
+        }
+    }
+
+    final class ApproveTargetRequest {
+        @SerializedName("target_id")
+        public final String targetId;
+        @SerializedName("approved_by")
+        public final String approvedBy;
+        @SerializedName("remarks")
+        public final String remarks;
+        @SerializedName("status")
+        public final String status;
+        @SerializedName("items")
+        public final List<ProductInfo> items;
+
+        public ApproveTargetRequest(String targetId, String approvedBy, String remarks,
+                                    String status, List<ProductInfo> items) {
+            this.targetId = targetId;
+            this.approvedBy = approvedBy;
+            this.remarks = remarks;
+            this.status = status;
+            this.items = items;
         }
     }
 }

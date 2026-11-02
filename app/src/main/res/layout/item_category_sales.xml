@@ -15,6 +15,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="8dp"
+            android:layout_toStartOf="@id/tvCategoryValue"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:textColor="@color/on_surface_light"
             android:textSize="14sp"
             android:textStyle="bold" />
@@ -24,6 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
             android:textColor="@color/on_surface_variant_light"
             android:textSize="13sp"
             android:textStyle="bold" />
@@ -39,5 +45,5 @@
         android:layout_height="8dp"
         app:indicatorColor="@color/google_blue"
         app:trackColor="@color/tonal_surface_light"
-        app:trackCornerRadius="4dp" />
+        app:trackCornerRadius="999dp" />
 </LinearLayout>

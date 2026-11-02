@@ -3,9 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/card_margin_bottom"
     app:cardBackgroundColor="@color/surface_light"
-    app:cardCornerRadius="19dp"
-    app:cardElevation="2dp"
+    app:cardCornerRadius="@dimen/card_corner_radius_expressive"
+    app:cardElevation="0dp"
     app:strokeColor="@color/outline_light"
     app:strokeWidth="1dp">
 
@@ -13,8 +14,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="14dp">
+        android:padding="@dimen/card_padding">
 
+        <!-- Top Badges & SKU Row -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -25,11 +27,12 @@
                 android:id="@+id/tvProductBrand"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/google_blue"
-                android:paddingStart="8dp"
-                android:paddingTop="4dp"
-                android:paddingEnd="8dp"
-                android:paddingBottom="4dp"
+                android:background="@drawable/shape_rounded_badge"
+                android:backgroundTint="@color/google_blue"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="3dp"
                 android:textColor="@color/surface_light"
                 android:textSize="11sp"
                 android:textStyle="bold" />
@@ -40,6 +43,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:textColor="@color/on_surface_variant_light"
                 android:textSize="12sp" />
 
@@ -47,15 +52,17 @@
                 android:id="@+id/tvProductType"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/tonal_surface_light"
-                android:paddingStart="7dp"
-                android:paddingTop="3dp"
-                android:paddingEnd="7dp"
-                android:paddingBottom="3dp"
+                android:background="@drawable/shape_rounded_badge"
+                android:backgroundTint="@color/tonal_surface_light"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="3dp"
                 android:textColor="@color/on_surface_variant_light"
                 android:textSize="11sp" />
         </LinearLayout>
 
+        <!-- Product Name, Price, and Expressive Quantity Stepper -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -73,6 +80,7 @@
                     android:id="@+id/tvProductName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:ellipsize="end"
                     android:maxLines="2"
                     android:textColor="@color/on_surface_light"
                     android:textSize="15sp"
@@ -82,7 +90,9 @@
                     android:id="@+id/tvProductPrice"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="4dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     android:textColor="@color/google_blue"
                     android:textSize="12sp"
                     android:textStyle="bold" />
@@ -91,42 +101,50 @@
             <LinearLayout
                 android:id="@+id/orderQuantityStepper"
                 android:layout_width="wrap_content"
-                android:layout_height="42dp"
-                android:layout_marginStart="8dp"
-                android:background="@color/tonal_surface_light"
-                android:gravity="center"
-                android:orientation="horizontal">
+                android:layout_height="38dp"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/shape_rounded_badge"
+                android:backgroundTint="@color/tonal_surface_light"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="2dp">
 
                 <TextView
                     android:id="@+id/btnDecreaseQuantity"
-                    android:layout_width="34dp"
+                    android:layout_width="36dp"
                     android:layout_height="match_parent"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
                     android:contentDescription="Decrease quantity"
+                    android:focusable="true"
                     android:gravity="center"
                     android:text="−"
                     android:textColor="@color/google_blue"
-                    android:textSize="22sp"
+                    android:textSize="20sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tvProductQuantity"
-                    android:layout_width="34dp"
+                    android:layout_width="32dp"
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:text="0"
                     android:textColor="@color/google_blue"
-                    android:textSize="15sp"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/btnIncreaseQuantity"
-                    android:layout_width="34dp"
+                    android:layout_width="36dp"
                     android:layout_height="match_parent"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
                     android:contentDescription="Increase quantity"
+                    android:focusable="true"
                     android:gravity="center"
                     android:text="+"
                     android:textColor="@color/google_blue"
-                    android:textSize="22sp"
+                    android:textSize="20sp"
                     android:textStyle="bold" />
             </LinearLayout>
         </LinearLayout>

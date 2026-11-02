@@ -18,6 +18,7 @@ import com.arif.smartordermanagement.R;
 import com.arif.smartordermanagement.data.DemoOperationsStore;
 import com.arif.smartordermanagement.databinding.FragmentOperationsBinding;
 import com.arif.smartordermanagement.databinding.LayoutOrderEntryBinding;
+import com.arif.smartordermanagement.databinding.LayoutSalesTargetSubmitBinding;
 import com.arif.smartordermanagement.model.ReportFilter;
 import com.arif.smartordermanagement.network.RetrofitClient;
 import com.arif.smartordermanagement.ui.common.ReportHeaderFilterView;
@@ -56,6 +57,10 @@ public class OperationsFragment extends Fragment {
     public static final String SAMPLE_APPROVAL = "sample_approval";
     public static final String SAMPLE_DELIVERY = "sample_delivery";
     public static final String SAMPLE_CENTER = "sample_center";
+    public static final String TARGET_CENTER = "target_center";
+    public static final String TARGET_SUBMIT = "target_submit";
+    public static final String TARGET_APPROVAL = "target_approval";
+    public static final String TARGET_REPORT = "target_report";
     private int hubTabIndex = -1;
     private String activeTabDestination;
     public static final String STOCK_INFO = "stock_info";
@@ -65,6 +70,9 @@ public class OperationsFragment extends Fragment {
     private FragmentOperationsBinding binding;
     private DailyInvoiceReportController dailyInvoiceReportController;
     private DailyInvoiceReportViewModel dailyInvoiceReportViewModel;
+    private SalesTargetViewModel salesTargetViewModel;
+    private SalesTargetSubmitController targetSubmitController;
+    private SalesTargetReportController targetReportController;
 
     public static OperationsFragment newInstance(String destination) {
         OperationsFragment fragment = new OperationsFragment();
@@ -107,6 +115,10 @@ public class OperationsFragment extends Fragment {
             case STOCK_INFO: return getString(R.string.stock_info);
             case ADMIN_PANEL: return getString(R.string.admin_panel);
             case SPECIAL_REQUIREMENTS: return getString(R.string.special_requirement_report);
+            case TARGET_CENTER: return getString(R.string.sales_target);
+            case TARGET_SUBMIT: return getString(R.string.submit_sales_target);
+            case TARGET_APPROVAL: return getString(R.string.senior_approve_target);
+            case TARGET_REPORT: return getString(R.string.target_status_report);
             default: return getString(R.string.order_reports);
         }
     }
@@ -118,6 +130,18 @@ public class OperationsFragment extends Fragment {
                 break;
             case ORDER_REPORTS:
                 renderOrderReportMenu();
+                break;
+            case TARGET_CENTER:
+                renderTargetCenter();
+                break;
+            case TARGET_SUBMIT:
+                renderTargetSubmit();
+                break;
+            case TARGET_APPROVAL:
+                renderTargetApproval();
+                break;
+            case TARGET_REPORT:
+                renderTargetReport();
                 break;
             case SAMPLE_CENTER:
                 renderSampleCenter();
@@ -208,6 +232,10 @@ public class OperationsFragment extends Fragment {
             dailyInvoiceReportController.clear();
             dailyInvoiceReportController = null;
         }
+        targetSubmitController = null;
+        targetReportController = null;
+        binding.orderCartBar.setVisibility(View.GONE);
+        binding.targetSubmitBar.setVisibility(View.GONE);
         activeTabDestination = destination;
         int contentStart = hubTabIndex + 1;
         if (binding.operationsContent.getChildCount() > contentStart) {
@@ -226,6 +254,51 @@ public class OperationsFragment extends Fragment {
         }
     }
 
+    private void renderTargetCenter() {
+        String[] labels = {
+                getString(R.string.submit_sales_target),
+                getString(R.string.senior_approve_target),
+                getString(R.string.target_status_report)
+        };
+        String[] destinations = {TARGET_SUBMIT, TARGET_APPROVAL, TARGET_REPORT};
+        addDestinationTabs(labels, destinations, TARGET_SUBMIT);
+    }
+
+    private void renderTargetSubmit() {
+        binding.operationsToolbar.setTitle(R.string.submit_sales_target);
+        if (salesTargetViewModel == null) {
+            salesTargetViewModel = new ViewModelProvider(this).get(SalesTargetViewModel.class);
+        }
+        binding.targetSubmitBar.setVisibility(View.VISIBLE);
+        LayoutSalesTargetSubmitBinding submitBinding = LayoutSalesTargetSubmitBinding.inflate(
+                LayoutInflater.from(requireContext()), binding.operationsContent, true);
+        targetSubmitController = new SalesTargetSubmitController(
+                requireContext(), submitBinding, binding, getViewLifecycleOwner(), salesTargetViewModel);
+        targetSubmitController.render();
+    }
+
+    private void renderTargetApproval() {
+        binding.operationsToolbar.setTitle(R.string.senior_approve_target);
+        if (salesTargetViewModel == null) {
+            salesTargetViewModel = new ViewModelProvider(this).get(SalesTargetViewModel.class);
+        }
+        salesTargetViewModel.setReportStatusFilter(com.arif.smartordermanagement.model.TargetStatus.PENDING);
+        targetReportController = new SalesTargetReportController(
+                requireContext(), binding.operationsContent, getViewLifecycleOwner(), salesTargetViewModel);
+        targetReportController.render();
+    }
+
+    private void renderTargetReport() {
+        binding.operationsToolbar.setTitle(R.string.target_status_report);
+        if (salesTargetViewModel == null) {
+            salesTargetViewModel = new ViewModelProvider(this).get(SalesTargetViewModel.class);
+        }
+        salesTargetViewModel.setReportStatusFilter("ALL");
+        targetReportController = new SalesTargetReportController(
+                requireContext(), binding.operationsContent, getViewLifecycleOwner(), salesTargetViewModel);
+        targetReportController.render();
+    }
+
     private void renderOrderForm() {
         binding.operationsToolbar.setTitle("Create Order");
         binding.orderCartBar.setVisibility(View.VISIBLE);
@@ -240,7 +313,7 @@ public class OperationsFragment extends Fragment {
 
     private void renderSalesReport(String destination) {
         if (DAILY_INVOICE.equals(destination)) {
-            addIntro(reportDescription(destination));
+
             if (dailyInvoiceReportViewModel == null) {
                 dailyInvoiceReportViewModel = new ViewModelProvider(this)
                         .get(DailyInvoiceReportViewModel.class);
@@ -252,7 +325,7 @@ public class OperationsFragment extends Fragment {
             return;
         }
 
-        addIntro(reportDescription(destination));
+
         addDemoNotice();
         addReportHeaderFilter(null);
 
@@ -306,16 +379,9 @@ public class OperationsFragment extends Fragment {
         addBodyText("Demo comparison: sales are up 14.2% from last week.");
     }
 
-    private String reportDescription(String destination) {
-        if (DAILY_INVOICE.equals(destination)) return "Browse invoice activity for a selected date.";
-        if (ACTUAL_SALES.equals(destination)) return "Track recorded order totals and sales volume.";
-        if (CUSTOMER_SALES.equals(destination)) return "See which customers contribute to sales.";
-        if (PRODUCT_SALES.equals(destination)) return "Compare revenue generated by each product.";
-        return "Compare sales with the previous reporting period.";
-    }
+
 
     private void renderSampleForm() {
-        addIntro("Request product samples for a customer or outlet.");
         addDemoNotice();
         TextInputEditText customer = addField("Customer or outlet", InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
         TextInputEditText product = addField("Sample product", InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
@@ -351,7 +417,6 @@ public class OperationsFragment extends Fragment {
     }
 
     private void renderSampleReport() {
-        addIntro("Track sample requests and their current status.");
         addDemoNotice();
         addReportHeaderFilter(filter -> {
             // Header search filter callback
@@ -364,7 +429,6 @@ public class OperationsFragment extends Fragment {
     }
 
     private void renderSampleApprovals() {
-        addIntro(getString(R.string.sample_approval_intro));
         addDemoNotice();
         int pendingCount = 0;
         for (DemoOperationsStore.SampleEntry sample : DemoOperationsStore.getSamples()) {
@@ -434,7 +498,6 @@ public class OperationsFragment extends Fragment {
     }
 
     private void renderSampleDelivery() {
-        addIntro(getString(R.string.sample_delivery_intro));
         addDemoNotice();
         int readyCount = 0;
         for (DemoOperationsStore.SampleEntry sample : DemoOperationsStore.getSamples()) {
@@ -460,7 +523,6 @@ public class OperationsFragment extends Fragment {
     }
 
     private void renderStockInfo() {
-        addIntro("Review current product availability.");
         addDemoNotice();
         addSectionTitle("Inventory");
         String[][] stock = {
@@ -476,7 +538,6 @@ public class OperationsFragment extends Fragment {
     }
 
     private void renderAdminPanel() {
-        addIntro("Administration and operational reports.");
         addDemoNotice();
         addActionCard(getString(R.string.samples),
                 "Manage sample requests, approvals, reports, and delivery.", SAMPLE_CENTER);
@@ -487,7 +548,6 @@ public class OperationsFragment extends Fragment {
     }
 
     private void renderSpecialRequirements() {
-        addIntro("Review special requests submitted by customers and the team.");
         addDemoNotice();
         addReportHeaderFilter(filter -> {
             // Header search filter callback
@@ -507,12 +567,7 @@ public class OperationsFragment extends Fragment {
         return String.valueOf(count);
     }
 
-    private void addIntro(String text) {
-        TextView intro = makeText(text, 15, color(R.color.on_surface_variant_light), false);
-        LinearLayout.LayoutParams params = paramsMatchWrap();
-        params.bottomMargin = dp(18);
-        binding.operationsContent.addView(intro, params);
-    }
+
 
     private void addDemoNotice() {
         TextView notice = makeText(getString(R.string.demo_data_notice), 12, color(R.color.on_google_blue_container), true);

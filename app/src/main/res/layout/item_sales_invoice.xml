@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:paddingStart="8dp"
-    android:paddingBottom="5dp">
+    android:paddingBottom="6dp">
 
     <FrameLayout
         android:layout_width="14dp"
@@ -30,7 +30,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         app:cardBackgroundColor="@color/surface_light"
-        app:cardCornerRadius="12dp"
+        app:cardCornerRadius="@dimen/card_corner_radius_expressive"
+        app:cardElevation="0dp"
         app:strokeColor="@color/outline_light"
         app:strokeWidth="1dp">
 
@@ -38,7 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="10dp">
+            android:padding="@dimen/card_padding">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -62,8 +63,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/shape_rounded_badge"
-                    android:paddingHorizontal="8dp"
-                    android:paddingVertical="3dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:paddingHorizontal="@dimen/badge_padding_horizontal"
+                    android:paddingVertical="@dimen/badge_padding_vertical"
                     android:textColor="@color/google_blue"
                     android:textSize="11sp"
                     android:textStyle="bold" />
@@ -84,7 +87,7 @@
                 android:id="@+id/invoiceMeta"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="1dp"
+                android:layout_marginTop="2dp"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:textColor="@color/on_surface_variant_light"
@@ -105,10 +108,11 @@
                 android:layout_marginTop="6dp"
                 android:background="@color/outline_light" />
 
+            <!-- Metrics Row (Order, Discount, Return, Payable) -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="6dp"
                 android:orientation="horizontal">
 
                 <LinearLayout

@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Centered content widths keep forms and dashboard sections readable on wide windows. -->
+    <!-- Centered content widths keep forms and dashboard sections readable on wide windows / tablets. -->
     <dimen name="auth_content_max_width">520dp</dimen>
     <dimen name="dashboard_content_max_width">1280dp</dimen>
+
+    <!-- Material 3 Expressive Component Radii -->
+    <dimen name="card_corner_radius_expressive">18dp</dimen>
+    <dimen name="card_corner_radius_large">24dp</dimen>
+    <dimen name="badge_corner_radius">100dp</dimen>
+    <dimen name="button_corner_radius_expressive">24dp</dimen>
+    <dimen name="input_corner_radius_expressive">14dp</dimen>
+
+    <!-- Responsive Layout Spacings (Base / 6.0-inch phones ~360-390dp) -->
+    <dimen name="screen_padding">14dp</dimen>
+    <dimen name="card_padding">14dp</dimen>
+    <dimen name="card_margin_bottom">8dp</dimen>
+    <dimen name="badge_padding_horizontal">8dp</dimen>
+    <dimen name="badge_padding_vertical">3dp</dimen>
 </resources>

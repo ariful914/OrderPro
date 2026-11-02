@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <!-- Expressive Hero Card: Target Period & Scope -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        app:cardBackgroundColor="@color/google_blue_container"
+        app:cardCornerRadius="@dimen/card_corner_radius_expressive"
+        app:cardElevation="0dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/card_padding">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TARGET PERIOD"
+                android:textColor="@color/on_google_blue_container"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="10dp"
+                android:text="Select the operating month for target submission"
+                android:textColor="@color/on_surface_light"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroupTargetMonth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:chipSpacingHorizontal="8dp"
+                app:selectionRequired="true"
+                app:singleLine="true"
+                app:singleSelection="true">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipMonthCurrent"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="November 2026" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipMonthNext"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="December 2026" />
+
+            </com.google.android.material.chip.ChipGroup>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Search Products Input -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/targetSearchLayout"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:hint="Search product, SKU or brand..."
+        app:boxCornerRadiusBottomEnd="@dimen/input_corner_radius_expressive"
+        app:boxCornerRadiusBottomStart="@dimen/input_corner_radius_expressive"
+        app:boxCornerRadiusTopEnd="@dimen/input_corner_radius_expressive"
+        app:boxCornerRadiusTopStart="@dimen/input_corner_radius_expressive"
+        app:startIconDrawable="@drawable/ic_search">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etTargetSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:textSize="15sp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Brand Filter Chips -->
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:scrollbars="none">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/brandChipGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:chipSpacingHorizontal="8dp"
+            app:selectionRequired="true"
+            app:singleLine="true"
+            app:singleSelection="true">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipBrandAll"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="All Brands" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipBrandAvene"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Avene" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipBrandCarex"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Carex" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipBrandCosmed"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cosmed" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipBrandBiumark"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Biumark" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipBrandWahib"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Wahib" />
+        </com.google.android.material.chip.ChipGroup>
+    </HorizontalScrollView>
+
+    <!-- Section Header: Products & Quantities -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="Products &amp; Target Quantities"
+        android:textColor="@color/on_surface_light"
+        android:textSize="15sp"
+        android:textStyle="bold" />
+
+    <!-- Products Container -->
+    <LinearLayout
+        android:id="@+id/targetProductsContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" />
+
+
+</LinearLayout>

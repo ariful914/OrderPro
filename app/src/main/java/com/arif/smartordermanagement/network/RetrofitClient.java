@@ -38,9 +38,12 @@ public final class RetrofitClient {
                 instance = retrofit;
                 if (instance == null) {
                     OkHttpClient.Builder http = new OkHttpClient.Builder();
+                    // Always add network logging interceptor so logs appear in Logcat under TAG "OrderProNetwork"
+                    http.addInterceptor(new NetworkLoggingInterceptor());
+
                     if (context != null) {
-                        http.addInterceptor(new NetworkLoggingInterceptor());
                         http.addInterceptor(new AuthInterceptor(context));
+                        http.addInterceptor(new CacheInterceptor(context));
                     }
                     Gson gson = new GsonBuilder().create();
                     instance = new Retrofit.Builder()

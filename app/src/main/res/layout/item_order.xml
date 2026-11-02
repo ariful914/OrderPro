@@ -3,9 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="8dp"
+    android:layout_marginBottom="@dimen/card_margin_bottom"
+    android:clickable="true"
+    android:focusable="true"
     app:cardBackgroundColor="@color/surface_light"
-    app:cardCornerRadius="12dp"
+    app:cardCornerRadius="@dimen/card_corner_radius_expressive"
+    app:cardElevation="0dp"
+    app:rippleColor="@color/google_blue_container"
     app:strokeColor="@color/outline_light"
     app:strokeWidth="1dp">
 
@@ -14,24 +18,45 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:padding="14dp">
+        android:padding="@dimen/card_padding">
 
+        <!-- Expressive Order Icon Container -->
+        <FrameLayout
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="12dp"
+            android:background="@drawable/shape_circle_primary_container">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:contentDescription="@null"
+                android:src="@drawable/ic_receipt"
+                app:tint="@color/google_blue" />
+        </FrameLayout>
+
+        <!-- Customer & Order Information -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical">
 
+            <!-- Responsive Customer Name & Status Badge Row -->
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/tvCustomerName"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     android:textColor="@color/on_surface_light"
                     android:textSize="15sp"
                     android:textStyle="bold" />
@@ -42,8 +67,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:background="@drawable/shape_rounded_badge"
-                    android:paddingHorizontal="6dp"
-                    android:paddingVertical="2dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:paddingHorizontal="@dimen/badge_padding_horizontal"
+                    android:paddingVertical="@dimen/badge_padding_vertical"
                     android:textColor="@color/trend_positive_green"
                     android:textSize="11sp"
                     android:textStyle="bold" />
@@ -51,19 +78,24 @@
 
             <TextView
                 android:id="@+id/tvOrderSubdetails"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:textColor="@color/on_surface_variant_light"
-                android:textSize="13sp" />
+                android:textSize="12sp" />
         </LinearLayout>
 
+        <!-- Total Amount -->
         <TextView
             android:id="@+id/tvOrderTotalAmount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:textColor="@color/on_surface_light"
+            android:gravity="end"
+            android:maxLines="1"
+            android:textColor="@color/google_blue"
             android:textSize="15sp"
             android:textStyle="bold" />
     </LinearLayout>

@@ -10,6 +10,10 @@
         android:title="@string/order_reports"
         app:showAsAction="never" />
     <item
+        android:id="@+id/action_sales_target"
+        android:title="@string/sales_target"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_samples"
         android:title="@string/samples"
         app:showAsAction="never" />

@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/surface_light"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <!-- Dialog Header -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SENIOR TARGET REVIEW"
+                android:textColor="@color/google_blue"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvSeniorDialogTargetId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="TGT-202611-102"
+                android:textColor="@color/on_surface_light"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvSeniorDialogSubmitter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="Kamrul Hasan · Gulshan Territory"
+                android:textColor="@color/on_surface_variant_light"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/btnSeniorDialogClose"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignParentEnd="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:contentDescription="Close"
+            android:focusable="true"
+            android:padding="6dp"
+            android:src="@drawable/ic_close"
+            app:tint="@color/on_surface_variant_light" />
+    </RelativeLayout>
+
+    <!-- Info Notice -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/shape_rounded_badge"
+        android:backgroundTint="@color/google_blue_container"
+        android:padding="10dp"
+        android:text="Senior Authority Mode: Adjust product quantities as necessary before approving."
+        android:textColor="@color/on_google_blue_container"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
+    <!-- Submitter's original note -->
+    <TextView
+        android:id="@+id/tvSubmitterNoteDisplay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Submitter Note: Target formulated based on doctor visit feedback."
+        android:textColor="@color/on_surface_variant_light"
+        android:textSize="12sp"
+        android:textStyle="italic" />
+
+    <!-- Scrollable Product Edit List Container -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:maxHeight="320dp">
+
+        <LinearLayout
+            android:id="@+id/seniorEditProductListContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Live Approved Summary Card -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        app:cardBackgroundColor="@color/tonal_surface_light"
+        app:cardCornerRadius="@dimen/card_corner_radius_expressive"
+        app:cardElevation="0dp"
+        app:strokeColor="@color/outline_light"
+        app:strokeWidth="1dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="12dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="APPROVED UNITS"
+                    android:textColor="@color/on_surface_variant_light"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvSeniorLiveUnits"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="485 units"
+                    android:textColor="@color/on_surface_light"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.2"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="APPROVED TARGET VALUE"
+                    android:textColor="@color/google_blue"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvSeniorLiveAmount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="৳684,200.00"
+                    android:textColor="@color/google_blue"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Senior Remarks Input -->
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:hint="@string/senior_approval_notes"
+        app:boxCornerRadiusBottomEnd="@dimen/input_corner_radius_expressive"
+        app:boxCornerRadiusBottomStart="@dimen/input_corner_radius_expressive"
+        app:boxCornerRadiusTopEnd="@dimen/input_corner_radius_expressive"
+        app:boxCornerRadiusTopStart="@dimen/input_corner_radius_expressive">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etSeniorRemarks"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="top|start"
+            android:inputType="textMultiLine"
+            android:minLines="2"
+            android:textSize="14sp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Senior Action Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="end"
+        android:orientation="horizontal">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSeniorReject"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:text="Reject"
+            android:textColor="@color/trend_negative_red"
+            android:textSize="14sp"
+            app:cornerRadius="24dp"
+            app:strokeColor="@color/trend_negative_red" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSeniorApprove"
+            style="@style/Widget.Material3.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginStart="10dp"
+            android:backgroundTint="@color/trend_positive_green"
+            android:text="Approve Target"
+            android:textSize="14sp"
+            app:cornerRadius="24dp"
+            app:icon="@drawable/ic_check" />
+    </LinearLayout>
+</LinearLayout>

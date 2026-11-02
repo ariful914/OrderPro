@@ -11,5 +11,10 @@
         <item name="colorOnSurface">@color/on_surface_light</item>
         <item name="colorOnSurfaceVariant">@color/on_surface_variant_light</item>
         <item name="colorOutline">@color/outline_light</item>
+
+        <!-- Material 3 Expressive Shapes -->
+        <item name="shapeAppearanceCornerSmall">@style/ShapeAppearance.OrderPro.SmallComponent</item>
+        <item name="shapeAppearanceCornerMedium">@style/ShapeAppearance.OrderPro.MediumComponent</item>
+        <item name="shapeAppearanceCornerLarge">@style/ShapeAppearance.OrderPro.LargeComponent</item>
     </style>
 </resources>

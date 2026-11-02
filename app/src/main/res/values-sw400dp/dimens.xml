@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Responsive Layout Spacings for 6.5-inch+ screens (width >= 400dp) -->
+    <dimen name="screen_padding">16dp</dimen>
+    <dimen name="card_padding">16dp</dimen>
+    <dimen name="card_margin_bottom">10dp</dimen>
+    <dimen name="badge_padding_horizontal">10dp</dimen>
+    <dimen name="badge_padding_vertical">4dp</dimen>
+</resources>

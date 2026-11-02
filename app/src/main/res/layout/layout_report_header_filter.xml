@@ -4,10 +4,10 @@
     android:id="@+id/cardReportHeaderFilter"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="8dp"
+    android:layout_marginBottom="@dimen/card_margin_bottom"
     app:cardBackgroundColor="@color/surface_light"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="1dp"
+    app:cardCornerRadius="@dimen/card_corner_radius_expressive"
+    app:cardElevation="0dp"
     app:strokeColor="@color/outline_light"
     app:strokeWidth="1dp">
 
@@ -15,12 +15,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="10dp">
+        android:padding="@dimen/card_padding">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="6dp"
+            android:layout_marginBottom="8dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -41,10 +41,11 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
+        <!-- Date Inputs (From / To) -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
+            android:layout_marginBottom="6dp"
             android:baselineAligned="false"
             android:orientation="horizontal">
 
@@ -55,7 +56,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="4dp"
                 android:layout_weight="1"
-                android:hint="From">
+                android:hint="From"
+                app:boxCornerRadiusBottomEnd="@dimen/input_corner_radius_expressive"
+                app:boxCornerRadiusBottomStart="@dimen/input_corner_radius_expressive"
+                app:boxCornerRadiusTopEnd="@dimen/input_corner_radius_expressive"
+                app:boxCornerRadiusTopStart="@dimen/input_corner_radius_expressive">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etFromDate"
@@ -68,7 +73,7 @@
                     android:minHeight="44dp"
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp"
-                    android:textSize="14sp" />
+                    android:textSize="13sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -78,7 +83,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:layout_weight="1"
-                android:hint="To">
+                android:hint="To"
+                app:boxCornerRadiusBottomEnd="@dimen/input_corner_radius_expressive"
+                app:boxCornerRadiusBottomStart="@dimen/input_corner_radius_expressive"
+                app:boxCornerRadiusTopEnd="@dimen/input_corner_radius_expressive"
+                app:boxCornerRadiusTopStart="@dimen/input_corner_radius_expressive">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etToDate"
@@ -91,10 +100,11 @@
                     android:minHeight="44dp"
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp"
-                    android:textSize="14sp" />
+                    android:textSize="13sp" />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
+        <!-- Dropdowns (Region & Area) -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -147,6 +157,7 @@
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
+        <!-- Territory & Search Button -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -182,8 +193,9 @@
                 android:layout_height="44dp"
                 android:minWidth="96dp"
                 android:text="Search"
+                android:textAllCaps="false"
                 android:textSize="14sp"
-                app:cornerRadius="24dp"
+                app:cornerRadius="@dimen/button_corner_radius_expressive"
                 app:icon="@drawable/ic_search"
                 app:iconGravity="textStart"
                 app:iconPadding="6dp" />

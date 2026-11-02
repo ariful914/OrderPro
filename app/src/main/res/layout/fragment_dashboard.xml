@@ -39,7 +39,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp"
+                android:padding="@dimen/screen_padding"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -70,12 +70,14 @@
                     android:layout_marginTop="2dp"
                     android:text="Sales Manager • Apex Solutions Inc."
                     android:textColor="@color/on_surface_variant_light"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     android:textSize="13sp" />
             </LinearLayout>
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="12dp" />
+                android:layout_height="10dp" />
 
             <!-- At A Glance Title -->
             <TextView
@@ -88,57 +90,64 @@
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="12dp" />
+                android:layout_height="10dp" />
 
-            <!-- Timeframe Filter Chips -->
-            <LinearLayout
+            <!-- Timeframe Filter Chips in HorizontalScrollView for 6" - 6.5" resilience -->
+            <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:scrollbars="none">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:text="@string/period_label"
-                    android:textColor="@color/on_surface_variant_light"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
-                <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/chipGroupTimeframe"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:singleSelection="true">
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipToday"
-                        style="@style/Widget.Material3.Chip.Filter"
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Today" />
+                        android:layout_marginEnd="8dp"
+                        android:text="@string/period_label"
+                        android:textColor="@color/on_surface_variant_light"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipThisWeek"
-                        style="@style/Widget.Material3.Chip.Filter"
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/chipGroupTimeframe"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:checked="true"
-                        android:text="This Week" />
+                        app:singleLine="true"
+                        app:singleSelection="true">
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipThisMonth"
-                        style="@style/Widget.Material3.Chip.Filter"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="This Month" />
-                </com.google.android.material.chip.ChipGroup>
-            </LinearLayout>
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipToday"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Today" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipThisWeek"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="true"
+                            android:text="This Week" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipThisMonth"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="This Month" />
+                    </com.google.android.material.chip.ChipGroup>
+                </LinearLayout>
+            </HorizontalScrollView>
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="12dp" />
+                android:layout_height="10dp" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -158,6 +167,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:baselineAligned="false"
                     android:orientation="horizontal">
 
                     <include
@@ -179,11 +189,12 @@
 
                 <Space
                     android:layout_width="match_parent"
-                    android:layout_height="12dp" />
+                    android:layout_height="10dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:baselineAligned="false"
                     android:orientation="horizontal">
 
                     <include
@@ -213,7 +224,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardBackgroundColor="@color/surface_light"
-                app:cardCornerRadius="16dp"
+                app:cardCornerRadius="@dimen/card_corner_radius_expressive"
+                app:cardElevation="0dp"
                 app:strokeColor="@color/outline_light"
                 app:strokeWidth="1dp">
 
@@ -221,7 +233,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="@dimen/card_padding">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -231,6 +243,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentStart="true"
+                            android:layout_toStartOf="@id/tvSalesTrendTotal"
+                            android:layout_marginEnd="8dp"
                             android:orientation="vertical">
 
                             <TextView
@@ -282,7 +296,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardBackgroundColor="@color/surface_light"
-                app:cardCornerRadius="16dp"
+                app:cardCornerRadius="@dimen/card_corner_radius_expressive"
+                app:cardElevation="0dp"
                 app:strokeColor="@color/outline_light"
                 app:strokeWidth="1dp">
 
@@ -290,7 +305,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="@dimen/card_padding">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -312,6 +327,10 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="16dp" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -321,6 +340,7 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
+            <!-- Quick Actions Grid -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -337,8 +357,9 @@
                     android:contentDescription="@string/quick_new_order"
                     android:focusable="true"
                     app:cardBackgroundColor="@color/surface_light"
-                    app:cardCornerRadius="16dp"
+                    app:cardCornerRadius="@dimen/card_corner_radius_expressive"
                     app:cardElevation="0dp"
+                    app:rippleColor="@color/google_blue_container"
                     app:strokeColor="@color/outline_light"
                     app:strokeWidth="1dp">
 
@@ -350,8 +371,8 @@
                         android:padding="12dp">
 
                         <FrameLayout
-                            android:layout_width="42dp"
-                            android:layout_height="42dp"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
                             android:background="@drawable/shape_circle_primary_container">
 
                             <ImageView
@@ -368,6 +389,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
                             android:layout_weight="1"
+                            android:ellipsize="end"
+                            android:maxLines="2"
                             android:text="@string/quick_new_order"
                             android:textColor="@color/on_surface_light"
                             android:textSize="14sp"
@@ -385,8 +408,9 @@
                     android:contentDescription="@string/quick_order_reports"
                     android:focusable="true"
                     app:cardBackgroundColor="@color/surface_light"
-                    app:cardCornerRadius="16dp"
+                    app:cardCornerRadius="@dimen/card_corner_radius_expressive"
                     app:cardElevation="0dp"
+                    app:rippleColor="@color/google_blue_container"
                     app:strokeColor="@color/outline_light"
                     app:strokeWidth="1dp">
 
@@ -398,8 +422,8 @@
                         android:padding="12dp">
 
                         <FrameLayout
-                            android:layout_width="42dp"
-                            android:layout_height="42dp"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
                             android:background="@drawable/shape_circle_primary_container">
 
                             <ImageView
@@ -416,6 +440,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
                             android:layout_weight="1"
+                            android:ellipsize="end"
+                            android:maxLines="2"
                             android:text="@string/quick_order_reports"
                             android:textColor="@color/on_surface_light"
                             android:textSize="14sp"
@@ -440,8 +466,9 @@
                     android:contentDescription="@string/samples"
                     android:focusable="true"
                     app:cardBackgroundColor="@color/surface_light"
-                    app:cardCornerRadius="16dp"
+                    app:cardCornerRadius="@dimen/card_corner_radius_expressive"
                     app:cardElevation="0dp"
+                    app:rippleColor="@color/google_blue_container"
                     app:strokeColor="@color/outline_light"
                     app:strokeWidth="1dp">
 
@@ -453,8 +480,8 @@
                         android:padding="12dp">
 
                         <FrameLayout
-                            android:layout_width="42dp"
-                            android:layout_height="42dp"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
                             android:background="@drawable/shape_circle_primary_container">
 
                             <ImageView
@@ -471,6 +498,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
                             android:layout_weight="1"
+                            android:ellipsize="end"
+                            android:maxLines="2"
                             android:text="@string/samples"
                             android:textColor="@color/on_surface_light"
                             android:textSize="14sp"
@@ -482,14 +511,15 @@
                     android:id="@+id/btnStockInfo"
                     android:layout_width="0dp"
                     android:layout_height="82dp"
-                    android:layout_marginEnd="6dp"
+                    android:layout_marginStart="6dp"
                     android:layout_weight="1"
                     android:clickable="true"
                     android:contentDescription="@string/quick_stock"
                     android:focusable="true"
                     app:cardBackgroundColor="@color/surface_light"
-                    app:cardCornerRadius="16dp"
+                    app:cardCornerRadius="@dimen/card_corner_radius_expressive"
                     app:cardElevation="0dp"
+                    app:rippleColor="@color/google_blue_container"
                     app:strokeColor="@color/outline_light"
                     app:strokeWidth="1dp">
 
@@ -501,8 +531,8 @@
                         android:padding="12dp">
 
                         <FrameLayout
-                            android:layout_width="42dp"
-                            android:layout_height="42dp"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
                             android:background="@drawable/shape_circle_primary_container">
 
                             <ImageView
@@ -519,10 +549,84 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
                             android:layout_weight="1"
+                            android:ellipsize="end"
+                            android:maxLines="2"
                             android:text="@string/quick_stock"
                             android:textColor="@color/on_surface_light"
                             android:textSize="14sp"
                             android:textStyle="bold" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/btnSalesTarget"
+                    android:layout_width="match_parent"
+                    android:layout_height="82dp"
+                    android:clickable="true"
+                    android:contentDescription="@string/sales_target"
+                    android:focusable="true"
+                    app:cardBackgroundColor="@color/surface_light"
+                    app:cardCornerRadius="@dimen/card_corner_radius_expressive"
+                    app:cardElevation="0dp"
+                    app:rippleColor="@color/google_blue_container"
+                    app:strokeColor="@color/outline_light"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="12dp">
+
+                        <FrameLayout
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/shape_circle_primary_container">
+
+                            <ImageView
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:layout_gravity="center"
+                                android:contentDescription="@null"
+                                android:src="@drawable/ic_orderpro_logo"
+                                app:tint="@color/google_blue" />
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:text="@string/sales_target"
+                                android:textColor="@color/on_surface_light"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:text="Submit targets, senior review, approvals &amp; status report"
+                                android:textColor="@color/on_surface_variant_light"
+                                android:textSize="11sp" />
+                        </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>

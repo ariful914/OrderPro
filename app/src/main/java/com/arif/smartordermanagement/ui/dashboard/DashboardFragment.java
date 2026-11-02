@@ -53,6 +53,7 @@ public class DashboardFragment extends Fragment {
         binding.btnOrderReports.setOnClickListener(v -> navigateToOrderReports());
         binding.btnSampleCenter.setOnClickListener(v -> navigateToOperations(OperationsFragment.SAMPLE_CENTER));
         binding.btnStockInfo.setOnClickListener(v -> navigateToOperations(OperationsFragment.STOCK_INFO));
+        binding.btnSalesTarget.setOnClickListener(v -> navigateToOperations(OperationsFragment.TARGET_CENTER));
     }
 
     private void navigateToOrderReports() {
@@ -87,6 +88,8 @@ public class DashboardFragment extends Fragment {
             } else if (itemId == R.id.action_order_reports) {
                 navigateToOrderReports();
                 return true;
+            } else if (itemId == R.id.action_sales_target) {
+                destination = OperationsFragment.TARGET_CENTER;
             } else if (itemId == R.id.action_samples) {
                 destination = OperationsFragment.SAMPLE_CENTER;
             } else if (itemId == R.id.action_stock_info) {

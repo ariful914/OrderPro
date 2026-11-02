@@ -202,6 +202,7 @@ public class SalesInvoiceAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     private final class EmployeeViewHolder extends RecyclerView.ViewHolder {
+        private final TextView avatar;
         private final TextView name;
         private final TextView summary;
         private final TextView totalLabel;
@@ -210,6 +211,7 @@ public class SalesInvoiceAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         EmployeeViewHolder(@NonNull View itemView) {
             super(itemView);
+            avatar = itemView.findViewById(R.id.employeeAvatar);
             name = itemView.findViewById(R.id.employeeName);
             summary = itemView.findViewById(R.id.employeeSummary);
             totalLabel = itemView.findViewById(R.id.employeeTotalLabel);
@@ -221,10 +223,11 @@ public class SalesInvoiceAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             String employeeName = group.employeeName.isEmpty() ? "Unknown employee" : group.employeeName;
             name.setText(group.username.isEmpty()
                     ? employeeName : employeeName + " (" + group.username + ")");
+            avatar.setText(initials(employeeName));
             summary.setText(String.format(Locale.getDefault(),
                     "Inv %d  ·  Acc %d  ·  Pend %d  ·  Ret %d",
                     group.invoices.size(), group.acceptedCount, group.pendingCount, group.returnCount));
-            totalLabel.setText("TOTAL");
+            totalLabel.setText("TOTAL SALES");
             total.setText(money(group.total));
             expandIcon.setText("⌄");
             expandIcon.animate().cancel();
@@ -246,6 +249,15 @@ public class SalesInvoiceAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         group.expanded ? R.color.google_blue : R.color.outline_light));
             }
             itemView.setOnClickListener(view -> toggle(group, view));
+        }
+
+        private String initials(String name) {
+            String[] parts = name.trim().split("\\\\s+");
+            if (parts.length > 1) {
+                return (parts[0].substring(0, 1) + parts[parts.length - 1].substring(0, 1))
+                        .toUpperCase(Locale.ROOT);
+            }
+            return name.substring(0, Math.min(2, name.length())).toUpperCase(Locale.ROOT);
         }
     }
 
@@ -329,7 +341,7 @@ public class SalesInvoiceAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 NumberFormat format = NumberFormat.getNumberInstance(Locale.US);
                 format.setMinimumFractionDigits(0);
                 format.setMaximumFractionDigits(2);
-                return "৳" + format.format(new BigDecimal(value.replace("৳", "").replace(",", "").trim()));
+                return "৳" + format.format(new BigDecimal(value.replace("BDT", "").replace("৳", "").replace(",", "").trim()));
             } catch (NumberFormatException | NullPointerException ignored) {
                 return value.startsWith("৳") ? value : "৳" + value;
             }

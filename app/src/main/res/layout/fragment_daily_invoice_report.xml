@@ -1,0 +1,489 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/dailyInvoiceReport"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/filterOptionsRoot"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/filterOptionsHeader"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="12dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawablePadding="5dp"
+                android:text="@string/daily_invoice_filter_options"
+                android:textColor="@color/on_surface_light"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:drawableStartCompat="@drawable/ic_filter" />
+
+            <TextView
+                android:id="@+id/filterOptionsIcon"
+                android:layout_width="32dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:importantForAccessibility="no"
+                android:text="⌄"
+                android:textColor="@color/google_blue"
+                android:textSize="22sp" />
+        </LinearLayout>
+
+        <com.arif.smartordermanagement.ui.common.ReportHeaderFilterView
+            android:id="@+id/reportHeaderFilter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/salesOverviewTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="4dp"
+        android:text="@string/daily_invoice_sales_overview"
+        android:textColor="@color/on_surface_light"
+        android:textSize="17sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:id="@+id/summaryCards"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_invoice_summary_tile"
+            android:backgroundTint="#E0E9FF"
+            android:orientation="vertical"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="5dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autoSizeMaxTextSize="11sp"
+                android:autoSizeMinTextSize="8sp"
+                android:autoSizeTextType="uniform"
+                android:maxLines="1"
+                android:text="@string/daily_invoice_total_sales"
+                android:textColor="#FF273D70"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/totalSalesValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autoSizeMaxTextSize="16sp"
+                android:autoSizeMinTextSize="9sp"
+                android:autoSizeTextType="uniform"
+                android:maxLines="1"
+                android:text="@string/daily_invoice_amount_placeholder"
+                android:textColor="#FF273D70"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_invoice_summary_tile"
+            android:backgroundTint="#EDEFF9"
+            android:orientation="vertical"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="5dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autoSizeMaxTextSize="11sp"
+                android:autoSizeMinTextSize="8sp"
+                android:autoSizeTextType="uniform"
+                android:maxLines="1"
+                android:text="@string/daily_invoice_discount"
+                android:textColor="#FF484E62"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/discountValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autoSizeMaxTextSize="16sp"
+                android:autoSizeMinTextSize="9sp"
+                android:autoSizeTextType="uniform"
+                android:maxLines="1"
+                android:text="@string/daily_invoice_amount_placeholder"
+                android:textColor="#FF484E62"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_invoice_summary_tile"
+            android:backgroundTint="#FCE8E6"
+            android:orientation="vertical"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="5dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autoSizeMaxTextSize="11sp"
+                android:autoSizeMinTextSize="8sp"
+                android:autoSizeTextType="uniform"
+                android:maxLines="1"
+                android:text="@string/additional_discount"
+                android:textColor="#FF484E62"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/additionalDiscountValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autoSizeMaxTextSize="16sp"
+                android:autoSizeMinTextSize="9sp"
+                android:autoSizeTextType="uniform"
+                android:maxLines="1"
+                android:text="@string/daily_invoice_amount_placeholder"
+                android:textColor="#FF484E62"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="5dp"
+        android:text="@string/daily_invoice_brand_sales"
+        android:textAllCaps="true"
+        android:textColor="@color/on_surface_variant_light"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="false"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="108dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="4dp"
+                android:background="@drawable/bg_brand_summary_tile"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="5dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autoSizeMaxTextSize="13sp"
+                    android:autoSizeMinTextSize="10sp"
+                    android:autoSizeTextType="uniform"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="@string/brand_avene"
+                    android:textColor="@color/on_surface_variant_light"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/brandAveneValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autoSizeMaxTextSize="14sp"
+                    android:autoSizeMinTextSize="10sp"
+                    android:autoSizeTextType="uniform"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="@string/daily_invoice_amount_placeholder"
+                    android:textColor="@color/on_surface_light"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="108dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="4dp"
+                android:background="@drawable/bg_brand_summary_tile"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="5dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autoSizeMaxTextSize="13sp"
+                    android:autoSizeMinTextSize="10sp"
+                    android:autoSizeTextType="uniform"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="@string/brand_biumark"
+                    android:textColor="@color/on_surface_variant_light"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/brandBiumarkValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autoSizeMaxTextSize="14sp"
+                    android:autoSizeMinTextSize="10sp"
+                    android:autoSizeTextType="uniform"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="@string/daily_invoice_amount_placeholder"
+                    android:textColor="@color/on_surface_light"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="108dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="4dp"
+                android:background="@drawable/bg_brand_summary_tile"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="5dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autoSizeMaxTextSize="13sp"
+                    android:autoSizeMinTextSize="10sp"
+                    android:autoSizeTextType="uniform"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="@string/brand_bionnex"
+                    android:textColor="@color/on_surface_variant_light"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/brandBionnexValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autoSizeMaxTextSize="14sp"
+                    android:autoSizeMinTextSize="10sp"
+                    android:autoSizeTextType="uniform"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="@string/daily_invoice_amount_placeholder"
+                    android:textColor="@color/on_surface_light"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="108dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="4dp"
+                android:background="@drawable/bg_brand_summary_tile"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="5dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autoSizeMaxTextSize="13sp"
+                    android:autoSizeMinTextSize="10sp"
+                    android:autoSizeTextType="uniform"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="@string/brand_cosmed"
+                    android:textColor="@color/on_surface_variant_light"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/brandCosmedValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autoSizeMaxTextSize="14sp"
+                    android:autoSizeMinTextSize="10sp"
+                    android:autoSizeTextType="uniform"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="@string/daily_invoice_amount_placeholder"
+                    android:textColor="@color/on_surface_light"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="108dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="4dp"
+                android:background="@drawable/bg_brand_summary_tile"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="5dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autoSizeMaxTextSize="13sp"
+                    android:autoSizeMinTextSize="10sp"
+                    android:autoSizeTextType="uniform"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="@string/brand_wahib"
+                    android:textColor="@color/on_surface_variant_light"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/brandWahibValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autoSizeMaxTextSize="14sp"
+                    android:autoSizeMinTextSize="10sp"
+                    android:autoSizeTextType="uniform"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="@string/daily_invoice_amount_placeholder"
+                    android:textColor="@color/on_surface_light"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|start"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp"
+        android:fillViewport="true"
+        android:scrollbars="none">
+
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/statusFilters"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:selectionRequired="true"
+            app:singleSelection="true">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/filterAll"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="44dp"
+                android:minWidth="88dp"
+                android:tag="all"
+                android:text="@string/daily_invoice_filter_all"
+                android:textAllCaps="false"
+                app:cornerRadius="22dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/filterAccepted"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="44dp"
+                android:minWidth="88dp"
+                android:tag="accepted"
+                android:text="@string/daily_invoice_filter_accepted"
+                android:textAllCaps="false"
+                app:cornerRadius="22dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/filterPending"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="44dp"
+                android:minWidth="88dp"
+                android:tag="pending"
+                android:text="@string/daily_invoice_filter_pending"
+                android:textAllCaps="false"
+                app:cornerRadius="22dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/filterReturned"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="44dp"
+                android:minWidth="88dp"
+                android:tag="return"
+                android:text="@string/daily_invoice_filter_returned"
+                android:textAllCaps="false"
+                app:cornerRadius="22dp" />
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+    </HorizontalScrollView>
+
+    <TextView
+        android:id="@+id/invoicesByEmployeeTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="2dp"
+        android:text="@string/daily_invoice_employee_heading"
+        android:textColor="@color/on_surface_light"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/emptyState"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/surface_light"
+        android:gravity="center"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="22dp"
+        android:text="@string/daily_invoice_initial_empty"
+        android:textColor="@color/on_surface_variant_light"
+        android:textSize="15sp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/invoiceList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:nestedScrollingEnabled="false"
+        android:visibility="gone" />
+</LinearLayout>

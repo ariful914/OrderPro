@@ -11,18 +11,20 @@ import android.widget.TextView;
 
 import com.arif.smartordermanagement.R;
 import com.arif.smartordermanagement.data.DemoOperationsStore;
+import com.arif.smartordermanagement.data.SalesTargetRepository;
 import com.arif.smartordermanagement.databinding.DialogOrderReviewBinding;
 import com.arif.smartordermanagement.databinding.FragmentOperationsBinding;
 import com.arif.smartordermanagement.databinding.ItemOrderCatalogProductBinding;
 import com.arif.smartordermanagement.databinding.ItemOrderReviewProductBinding;
 import com.arif.smartordermanagement.databinding.LayoutOrderEntryBinding;
+import com.arif.smartordermanagement.model.ProductInfo;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.text.NumberFormat;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -33,14 +35,8 @@ final class OrderEntryController {
     private final Context context;
     private final LayoutOrderEntryBinding order;
     private final FragmentOperationsBinding host;
-    private final List<CatalogProduct> products = Arrays.asList(
-            new CatalogProduct("371077", "AVENE", "Standard", "Avene Xeracalm Cleansing Gel · 100ml", 1900, 2185, "Cosmed"),
-            new CatalogProduct("396005", "AVENE", "Standard", "Avene Cleanance Gel · 200ml", 1960, 2250, "Cosmed"),
-            new CatalogProduct("396007", "AVENE", "Standard", "Thermal Spring Water Spray · 150ml", 1420, 1600, "Cosmed"),
-            new CatalogProduct("410221", "CAREX", "Standard", "Carex Daily Moisture Hand Wash · 250ml", 520, 650, "Carex"),
-            new CatalogProduct("410228", "CAREX", "Standard", "Carex Antibacterial Hand Gel · 200ml", 430, 540, "Carex"),
-            new CatalogProduct("500014", "OTHER", "Standard", "Daily Care Essentials Bundle", 1250, 1490, "Others")
-    );
+    private final SalesTargetRepository repository;
+    private final List<ProductInfo> products = new ArrayList<>(ProductInfo.getDefaultProducts());
     private final Map<String, Integer> quantities = new LinkedHashMap<>();
     private String selectedCategory = "All Products";
 
@@ -48,6 +44,7 @@ final class OrderEntryController {
         this.context = context;
         this.order = order;
         this.host = host;
+        this.repository = new SalesTargetRepository(context);
     }
 
     void bind() {
@@ -73,6 +70,26 @@ final class OrderEntryController {
         host.btnReviewOrder.setOnClickListener(v -> showReview());
         renderProducts();
         updateCart();
+        loadProductsFromApi();
+    }
+
+    private void loadProductsFromApi() {
+        repository.getProductData(null, new SalesTargetRepository.RepositoryCallback<>() {
+            @Override
+            public void onSuccess(List<ProductInfo> result) {
+                if (result != null && !result.isEmpty()) {
+                    products.clear();
+                    products.addAll(result);
+                    renderProducts();
+                    updateCart();
+                }
+            }
+
+            @Override
+            public void onError(String message) {
+                // Repository falls back to default products on failure
+            }
+        });
     }
 
     private void renderProducts() {
@@ -81,22 +98,30 @@ final class OrderEntryController {
         String query = valueOf(order.orderSearch).toLowerCase(Locale.ROOT);
         int visibleCount = 0;
 
-        for (CatalogProduct product : products) {
-            if (!"All Products".equals(selectedCategory) && !selectedCategory.equals(product.category)) continue;
+        for (ProductInfo product : products) {
+            String category = product.getCategory();
+            String brand = product.getBrandName();
+            if (!"All Products".equals(selectedCategory)
+                    && !category.equalsIgnoreCase(selectedCategory)
+                    && !brand.equalsIgnoreCase(selectedCategory)) {
+                continue;
+            }
             if (!query.isEmpty()
-                    && !product.name.toLowerCase(Locale.ROOT).contains(query)
-                    && !product.sku.toLowerCase(Locale.ROOT).contains(query)
-                    && !product.brand.toLowerCase(Locale.ROOT).contains(query)) continue;
+                    && !product.getProductName().toLowerCase(Locale.ROOT).contains(query)
+                    && !product.getProductCode().toLowerCase(Locale.ROOT).contains(query)
+                    && !brand.toLowerCase(Locale.ROOT).contains(query)) continue;
 
             visibleCount++;
             ItemOrderCatalogProductBinding item = ItemOrderCatalogProductBinding.inflate(
                     LayoutInflater.from(context), list, false);
-            item.tvProductBrand.setText(product.brand);
-            item.tvProductSku.setText("SKU: " + product.sku);
-            item.tvProductType.setText(product.type);
-            item.tvProductName.setText(product.name);
-            item.tvProductPrice.setText("TP: " + money(product.tp) + "  |  MRP: " + money(product.mrp));
-            item.tvProductQuantity.setText(String.valueOf(quantities.getOrDefault(product.sku, 0)));
+            item.tvProductBrand.setText(brand);
+            item.tvProductSku.setText("SKU: " + product.getProductCode());
+            item.tvProductType.setText(product.getPackSize());
+            item.tvProductName.setText(product.getProductName());
+            item.tvProductPrice.setText("TP: " + money(product.getTp()) + "  |  MRP: " + money(product.getMrp()));
+            Integer q = quantities.get(product.getProductCode());
+            int qty = q != null ? q : 0;
+            item.tvProductQuantity.setText(String.valueOf(qty));
             item.btnDecreaseQuantity.setOnClickListener(v -> changeQuantity(product, -1));
             item.btnIncreaseQuantity.setOnClickListener(v -> changeQuantity(product, 1));
 
@@ -116,11 +141,13 @@ final class OrderEntryController {
         }
     }
 
-    private void changeQuantity(CatalogProduct product, int delta) {
-        int current = quantities.getOrDefault(product.sku, 0);
+    private void changeQuantity(ProductInfo product, int delta) {
+        String sku = product.getProductCode();
+        Integer existing = quantities.get(sku);
+        int current = existing != null ? existing : 0;
         int next = current + delta;
-        if (next <= 0) quantities.remove(product.sku);
-        else quantities.put(product.sku, next);
+        if (next <= 0) quantities.remove(sku);
+        else quantities.put(sku, next);
         updateCart();
         renderProducts();
     }
@@ -129,11 +156,12 @@ final class OrderEntryController {
         int productCount = 0;
         int unitCount = 0;
         double total = 0;
-        for (CatalogProduct product : products) {
-            int quantity = quantities.getOrDefault(product.sku, 0);
+        for (ProductInfo product : products) {
+            Integer q = quantities.get(product.getProductCode());
+            int quantity = q != null ? q : 0;
             if (quantity > 0) productCount++;
             unitCount += quantity;
-            total += quantity * product.tp;
+            total += quantity * product.getTp();
         }
         host.tvCartItems.setText(productCount + " products · " + unitCount + " units");
         host.tvCartTotal.setText(money(total));
@@ -180,18 +208,20 @@ final class OrderEntryController {
 
         int productsInCart = 0;
         int unitsInCart = 0;
-        for (CatalogProduct product : products) {
-            int quantity = quantities.getOrDefault(product.sku, 0);
+        for (ProductInfo product : products) {
+            String sku = product.getProductCode();
+            Integer q = quantities.get(sku);
+            int quantity = q != null ? q : 0;
             if (quantity <= 0) continue;
 
             productsInCart++;
             unitsInCart += quantity;
             ItemOrderReviewProductBinding item = ItemOrderReviewProductBinding.inflate(
                     LayoutInflater.from(context), review.reviewProductList, false);
-            item.tvReviewProductName.setText(product.name);
+            item.tvReviewProductName.setText(product.getProductName());
             item.tvReviewProductQuantity.setText(String.valueOf(quantity));
-            item.tvReviewUnitPrice.setText(money(product.tp) + " each");
-            item.tvReviewLineTotal.setText(money(quantity * product.tp));
+            item.tvReviewUnitPrice.setText(money(product.getTp()) + " each");
+            item.tvReviewLineTotal.setText(money(quantity * product.getTp()));
             item.btnReviewDecrease.setOnClickListener(v -> {
                 changeQuantity(product, -1);
                 populateReview(review);
@@ -201,7 +231,7 @@ final class OrderEntryController {
                 populateReview(review);
             });
             item.btnReviewRemove.setOnClickListener(v -> {
-                quantities.remove(product.sku);
+                quantities.remove(sku);
                 updateCart();
                 renderProducts();
                 populateReview(review);
@@ -231,10 +261,11 @@ final class OrderEntryController {
         }
 
         int units = 0;
-        for (CatalogProduct product : products) {
-            int quantity = quantities.getOrDefault(product.sku, 0);
+        for (ProductInfo product : products) {
+            Integer q = quantities.get(product.getProductCode());
+            int quantity = q != null ? q : 0;
             if (quantity > 0) {
-                DemoOperationsStore.addOrder(customer, product.name, quantity, quantity * product.tp);
+                DemoOperationsStore.addOrder(customer, product.getProductName(), quantity, quantity * product.getTp());
                 units += quantity;
             }
         }
@@ -266,25 +297,5 @@ final class OrderEntryController {
 
     private int dp(float value) {
         return (int) (value * context.getResources().getDisplayMetrics().density + 0.5f);
-    }
-
-    private static final class CatalogProduct {
-        final String sku;
-        final String brand;
-        final String type;
-        final String name;
-        final double tp;
-        final double mrp;
-        final String category;
-
-        CatalogProduct(String sku, String brand, String type, String name, double tp, double mrp, String category) {
-            this.sku = sku;
-            this.brand = brand;
-            this.type = type;
-            this.name = name;
-            this.tp = tp;
-            this.mrp = mrp;
-            this.category = category;
-        }
     }
 }
