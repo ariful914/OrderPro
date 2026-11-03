@@ -55,10 +55,11 @@ public final class SalesInvoiceRepository {
                 selectedId(filter.getArea() != null ? filter.getArea().getId() : null),
                 fromDate,
                 selectedId(filter.getRegion() != null ? filter.getRegion().getId() : null),
-                0,
+                selectedId(filter.getSubArea() != null ? filter.getSubArea().getId() : null),
                 selectedId(filter.getTerritory() != null ? filter.getTerritory().getId() : null),
                 toDate,
-                user.getZoneId() != null ? user.getZoneId() : 0,
+                filter.getZone() != null ? selectedId(filter.getZone().getId())
+                        : user.getZoneId() != null ? user.getZoneId() : 0,
                 user.getDepotId() != null ? user.getDepotId() : 0,
                 0);
 

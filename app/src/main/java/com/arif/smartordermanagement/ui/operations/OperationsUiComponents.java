@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
+import com.arif.smartordermanagement.FilterSharedViewModel;
 import com.arif.smartordermanagement.R;
 import com.arif.smartordermanagement.model.ReportFilter;
 import com.arif.smartordermanagement.ui.common.ReportHeaderFilterView;
@@ -34,13 +35,16 @@ final class OperationsUiComponents {
     private final LinearLayout content;
     private final NavigationHandler navigationHandler;
     private final MessageHandler messageHandler;
+    private final FilterSharedViewModel filterSharedViewModel;
 
     OperationsUiComponents(Context context, LinearLayout content,
-                           NavigationHandler navigationHandler, MessageHandler messageHandler) {
+                           NavigationHandler navigationHandler, MessageHandler messageHandler,
+                           FilterSharedViewModel filterSharedViewModel) {
         this.context = context;
         this.content = content;
         this.navigationHandler = navigationHandler;
         this.messageHandler = messageHandler;
+        this.filterSharedViewModel = filterSharedViewModel;
     }
 
     void addDemoNotice() {
@@ -162,6 +166,7 @@ final class OperationsUiComponents {
     void addReportHeaderFilter(
             ReportHeaderFilterView.OnSearchClickListener onSearch) {
         ReportHeaderFilterView filterView = new ReportHeaderFilterView(context);
+        filterView.setSharedViewModel(filterSharedViewModel);
         filterView.setOnSearchClickListener(filter ->
                 new MaterialAlertDialogBuilder(context)
                         .setTitle("Confirm report filters")
@@ -198,11 +203,13 @@ final class OperationsUiComponents {
     }
 
     private String filterConfirmationText(ReportFilter filter) {
+        String zone = filter.getZone() != null ? filter.getZone().getName() : "All Zones";
         String region = filter.getRegion() != null ? filter.getRegion().getName() : "All Regions";
         String area = filter.getArea() != null ? filter.getArea().getName() : "All Areas";
         String territory = filter.getTerritory() != null
                 ? filter.getTerritory().getName() : "All Territories";
         return "Date: " + filter.getFromDate() + " – " + filter.getToDate()
+                + "\nZone: " + zone
                 + "\nRegion: " + region
                 + "\nArea: " + area
                 + "\nTerritory: " + territory

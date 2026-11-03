@@ -47,15 +47,68 @@ public class DashboardFragment extends Fragment {
         setupToolbar();
         setupQuickActions();
         setupFilters();
+        setupDashboardTabs();
+        renderDemoSummary(TimeFrame.THIS_WEEK);
         observeViewModel();
     }
 
+    private void renderDashboardSummary(String periodTitle,
+                                        String currentPeriodLabel,
+                                        String previousPeriodLabel,
+                                        String currentCollection,
+                                        String previousCollection,
+                                        String marketDue,
+                                        String achievementAndTarget,
+                                        int achievementPercent) {
+        binding.tvMarketOverviewTitle.setText(periodTitle);
+        binding.tvCollectionPeriodLabel.setText(currentPeriodLabel);
+        binding.tvPreviousPeriodLabel.setText(previousPeriodLabel);
+        binding.tvCollectionThisMonth.setText(currentCollection);
+        binding.tvCollectionPreviousMonth.setText(previousCollection);
+        binding.tvMarketDue.setText(marketDue);
+        binding.tvTargetAchievementValue.setText(achievementAndTarget);
+
+        int boundedPercent = Math.max(0, Math.min(100, achievementPercent));
+        binding.tvTargetAchievementRatio.setText(
+                "Target achievement · " + boundedPercent + "%");
+        binding.progressTargetAchievement.setProgress(boundedPercent);
+    }
+
+    private void setupDashboardTabs() {
+        binding.tabDashboardSections.addOnTabSelectedListener(
+                new com.google.android.material.tabs.TabLayout.OnTabSelectedListener() {
+                    @Override
+                    public void onTabSelected(com.google.android.material.tabs.TabLayout.Tab tab) {
+                        boolean showWorkspace = tab.getPosition() == 1;
+                        binding.layoutOverviewHeader.setVisibility(showWorkspace ? View.GONE : View.VISIBLE);
+                        binding.layoutOverviewDetails.setVisibility(showWorkspace ? View.GONE : View.VISIBLE);
+                        binding.layoutWorkspaceTab.setVisibility(showWorkspace ? View.VISIBLE : View.GONE);
+                    }
+
+                    @Override
+                    public void onTabUnselected(com.google.android.material.tabs.TabLayout.Tab tab) { }
+
+                    @Override
+                    public void onTabReselected(com.google.android.material.tabs.TabLayout.Tab tab) { }
+                });
+
+        binding.layoutOverviewHeader.setVisibility(View.VISIBLE);
+        binding.layoutOverviewDetails.setVisibility(View.VISIBLE);
+        binding.layoutWorkspaceTab.setVisibility(View.GONE);
+    }
+
     private void setupQuickActions() {
-        binding.btnOrderSubmit.setOnClickListener(v -> navigateToOperations(OperationsFragment.ORDER_SUBMIT));
-        binding.btnOrderReports.setOnClickListener(v -> navigateToOrderReports());
-        binding.btnSampleCenter.setOnClickListener(v -> navigateToOperations(OperationsFragment.SAMPLE_CENTER));
-        binding.btnStockInfo.setOnClickListener(v -> navigateToOperations(OperationsFragment.STOCK_INFO));
-        binding.btnSalesTarget.setOnClickListener(v -> navigateToOperations(OperationsFragment.TARGET_CENTER));
+        binding.btnWorkspaceOrder.setOnClickListener(v -> navigateToOperations(OperationsFragment.ORDER_SUBMIT));
+        binding.btnWorkspaceReports.setOnClickListener(v -> navigateToOrderReports());
+        binding.btnWorkspaceSamples.setOnClickListener(v -> navigateToOperations(OperationsFragment.SAMPLE_CENTER));
+        binding.btnWorkspaceStock.setOnClickListener(v -> navigateToOperations(OperationsFragment.STOCK_INFO));
+        binding.btnWorkspaceTargets.setOnClickListener(v -> navigateToOperations(OperationsFragment.TARGET_CENTER));
+
+        // Keep workspace actions near the dashboard summary instead of after the charts.
+        binding.tvQuickActionsTitle.setVisibility(View.GONE);
+        binding.layoutQuickActionsOrders.setVisibility(View.GONE);
+        binding.layoutQuickActionsInventory.setVisibility(View.GONE);
+        binding.layoutQuickActionsTargets.setVisibility(View.GONE);
     }
 
     private void navigateToOrderReports() {
@@ -119,7 +172,6 @@ public class DashboardFragment extends Fragment {
 
         viewModel.getCurrentUser().observe(getViewLifecycleOwner(), user -> {
             if (user != null) {
-                binding.toolbar.setSubtitle(user.getRole());
                 String timeGreeting = getTimeBasedGreeting();
                 String fullName = user.getName() == null ? "" : user.getName().trim();
                 String firstName = fullName.contains(" ")
@@ -164,14 +216,36 @@ public class DashboardFragment extends Fragment {
         binding.chipGroupTimeframe.setOnCheckedStateChangeListener((group, checkedIds) -> {
             if (checkedIds.isEmpty()) return;
             int checkedId = checkedIds.get(0);
+            TimeFrame selectedTimeFrame;
             if (checkedId == R.id.chipToday) {
-                viewModel.selectTimeFrame(TimeFrame.TODAY);
+                selectedTimeFrame = TimeFrame.TODAY;
             } else if (checkedId == R.id.chipThisMonth) {
-                viewModel.selectTimeFrame(TimeFrame.THIS_MONTH);
+                selectedTimeFrame = TimeFrame.THIS_MONTH;
             } else {
-                viewModel.selectTimeFrame(TimeFrame.THIS_WEEK);
+                selectedTimeFrame = TimeFrame.THIS_WEEK;
             }
+            renderDemoSummary(selectedTimeFrame);
+            viewModel.selectTimeFrame(selectedTimeFrame);
         });
+    }
+
+    private void renderDemoSummary(TimeFrame timeFrame) {
+        if (timeFrame == TimeFrame.TODAY) {
+            renderDashboardSummary("Market overview · Today",
+                    "Today's collection", "Yesterday's collection",
+                    "৳8,450", "৳7,920", "৳326,800",
+                    "৳8,450 achieved of ৳20,000", 42);
+        } else if (timeFrame == TimeFrame.THIS_MONTH) {
+            renderDashboardSummary("Market overview · This month",
+                    "This month's collection", "Previous month",
+                    "৳184,500", "৳162,300", "৳326,800",
+                    "৳360,000 achieved of ৳500,000", 72);
+        } else {
+            renderDashboardSummary("Market overview · This week",
+                    "This week's collection", "Previous week",
+                    "৳52,600", "৳48,200", "৳326,800",
+                    "৳105,200 achieved of ৳150,000", 70);
+        }
     }
 
     private void observeViewModel() {

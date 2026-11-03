@@ -56,7 +56,18 @@
 
     <string name="order_submit">Submit Order</string>
     <string name="order_reports">Order Reports</string>
-    <string name="order_reports_intro">Review sales activity and performance.</string>
+    <string name="order_reports_intro">Choose a report to explore your orders, sales, and targets.</string>
+    <string name="report_filters_title">Report filters</string>
+    <string name="report_filter_from">From</string>
+    <string name="report_filter_to">To</string>
+    <string name="report_filter_region">Region</string>
+    <string name="report_filter_area">Area</string>
+    <string name="report_filter_sub_area">Sub-area</string>
+    <string name="report_filter_territory">Territory</string>
+    <string name="report_filter_search">Search</string>
+    <string name="order_report_activity">ORDER ACTIVITY</string>
+    <string name="order_report_performance">SALES PERFORMANCE</string>
+    <string name="order_report_targets">TARGETS</string>
     <string name="daily_invoice">Daily Invoices</string>
     <string name="actual_sales">Actual Sales</string>
     <string name="customer_sales">Customer-wise Sales</string>

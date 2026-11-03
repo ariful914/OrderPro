@@ -75,9 +75,37 @@
                     android:textSize="13sp" />
             </LinearLayout>
 
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabDashboardSections"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                app:tabGravity="fill"
+                app:tabIndicatorColor="@color/google_blue"
+                app:tabMode="fixed"
+                app:tabSelectedTextColor="@color/google_blue"
+                app:tabTextColor="@color/on_surface_variant_light">
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sales overview" />
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Workspace" />
+            </com.google.android.material.tabs.TabLayout>
+
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="10dp" />
+
+            <LinearLayout
+                android:id="@+id/layoutOverviewHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
             <!-- At A Glance Title -->
             <TextView
@@ -158,10 +186,262 @@
                 android:textColor="@color/on_surface_variant_light"
                 android:textSize="12sp" />
 
+            <!-- Monthly collection, due and target summary. Values are demo placeholders for API integration. -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="@color/surface_light"
+                app:cardCornerRadius="@dimen/card_corner_radius_expressive"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/outline_light"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/card_padding">
+
+                    <TextView
+                        android:id="@+id/tvMarketOverviewTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Market overview · This week"
+                        android:textColor="@color/on_surface_light"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:baselineAligned="false"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.3"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tvCollectionPeriodLabel"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="This week collection"
+                                android:textColor="@color/on_surface_variant_light"
+                                android:textSize="12sp" />
+
+                            <TextView
+                                android:id="@+id/tvCollectionThisMonth"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="6dp"
+                                android:text="৳184,500"
+                                android:textColor="@color/google_blue"
+                                android:textSize="26sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.7"
+                            android:layout_marginStart="12dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tvPreviousPeriodLabel"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Previous week"
+                                android:textColor="@color/on_surface_variant_light"
+                                android:textSize="12sp" />
+
+                            <TextView
+                                android:id="@+id/tvCollectionPreviousMonth"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="6dp"
+                                android:text="৳162,300"
+                                android:textColor="@color/on_surface_light"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Market due"
+                                android:textColor="@color/on_surface_variant_light"
+                                android:textSize="13sp" />
+
+                            <TextView
+                                android:id="@+id/tvMarketDue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="৳326,800"
+                                android:textColor="@color/status_pending_amber"
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="14dp"
+                            app:cardBackgroundColor="@color/google_blue_container"
+                            app:cardCornerRadius="@dimen/card_corner_radius_expressive"
+                            app:cardElevation="0dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:padding="12dp">
+
+                                <TextView
+                                    android:id="@+id/tvTargetAchievementRatio"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="Target achievement · 72%"
+                                    android:textColor="@color/on_surface_light"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvTargetAchievementValue"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="৳360,000 achieved of ৳500,000"
+                            android:textColor="@color/on_surface_variant_light"
+                            android:textSize="13sp" />
+
+                        <com.google.android.material.progressindicator.LinearProgressIndicator
+                            android:id="@+id/progressTargetAchievement"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:max="100"
+                            android:progress="72"
+                            app:indicatorColor="@color/google_blue"
+                            app:trackColor="@color/outline_light" />
+
+                            </LinearLayout>
+                        </com.google.android.material.card.MaterialCardView>
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layoutWorkspaceTab"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnWorkspaceOrder"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="56dp"
+                        android:layout_marginEnd="6dp"
+                        android:layout_weight="1"
+                        android:text="New order"
+                        app:icon="@drawable/ic_cart"
+                        app:iconTint="@color/google_blue" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnWorkspaceReports"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="56dp"
+                        android:layout_marginStart="6dp"
+                        android:layout_weight="1"
+                        android:text="Reports"
+                        app:icon="@drawable/ic_receipt"
+                        app:iconTint="@color/google_blue" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnWorkspaceSamples"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="56dp"
+                        android:layout_marginEnd="6dp"
+                        android:layout_weight="1"
+                        android:text="Samples"
+                        app:icon="@drawable/ic_shipping"
+                        app:iconTint="@color/google_blue" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnWorkspaceStock"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="56dp"
+                        android:layout_marginStart="6dp"
+                        android:layout_weight="1"
+                        android:text="Stock"
+                        app:icon="@drawable/ic_shipping"
+                        app:iconTint="@color/google_blue" />
+                </LinearLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnWorkspaceTargets"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="8dp"
+                    android:text="Targets"
+                    app:icon="@drawable/ic_orderpro_logo"
+                    app:iconTint="@color/google_blue" />
+            </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layoutOverviewDetails"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
             <!-- 2x2 KPI Grid Container -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -331,7 +611,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="16dp" />
 
+            </LinearLayout>
+
             <TextView
+                android:id="@+id/tvQuickActionsTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
@@ -342,6 +625,7 @@
 
             <!-- Quick Actions Grid -->
             <LinearLayout
+                android:id="@+id/layoutQuickActionsOrders"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -451,6 +735,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/layoutQuickActionsInventory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -560,6 +845,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/layoutQuickActionsTargets"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"

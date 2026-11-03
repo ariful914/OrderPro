@@ -3,6 +3,7 @@ package com.arif.smartordermanagement.ui.operations;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -207,7 +208,7 @@ public class SalesInvoiceAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         private final TextView summary;
         private final TextView totalLabel;
         private final TextView total;
-        private final TextView expandIcon;
+        private final ImageView expandIcon;
 
         EmployeeViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -229,7 +230,7 @@ public class SalesInvoiceAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     group.invoices.size(), group.acceptedCount, group.pendingCount, group.returnCount));
             totalLabel.setText("TOTAL SALES");
             total.setText(money(group.total));
-            expandIcon.setText("⌄");
+            expandIcon.setImageResource(R.drawable.ic_spinner_chevron);
             expandIcon.animate().cancel();
             expandIcon.animate()
                     .rotation(group.expanded ? 180f : 0f)

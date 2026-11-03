@@ -15,7 +15,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public final class RetrofitClient {
-    private static final String BASE_URL = "https://aa-groupbd.com/api/";
+    private static final String BASE_URL = "https://aa-groupbd.com/public/api/";
     private static volatile Retrofit retrofit;
     private static String configuredBaseUrl;
 

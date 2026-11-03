@@ -15,33 +15,58 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="@dimen/card_padding">
+        android:paddingStart="12dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="12dp"
+        android:paddingBottom="12dp">
 
         <LinearLayout
+            android:id="@+id/filterHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="6dp"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="gone"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingVertical="4dp">
 
             <ImageView
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:contentDescription="Filter Icon"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:contentDescription="@null"
                 android:src="@drawable/ic_filter"
                 app:tint="@color/google_blue" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="6dp"
-                android:text="Report Filters"
+                android:layout_weight="1"
+                android:text="@string/report_filters_title"
                 android:textColor="@color/on_surface_light"
-                android:textSize="14sp"
+                android:textSize="13sp"
                 android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/filterExpandIcon"
+                android:layout_width="35dp"
+                android:layout_height="32dp"
+                android:background="@drawable/bg_report_spinner_badge"
+                android:contentDescription="@null"
+                android:padding="5dp"
+                android:src="@drawable/ic_spinner_chevron"
+                app:tint="@color/google_blue" />
         </LinearLayout>
 
-        <!-- Date Inputs (From / To) -->
+        <LinearLayout
+            android:id="@+id/filterContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -54,13 +79,13 @@
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
+                android:layout_marginEnd="3dp"
                 android:layout_weight="1"
-                android:hint="From"
-                app:boxCornerRadiusBottomEnd="@dimen/input_corner_radius_expressive"
-                app:boxCornerRadiusBottomStart="@dimen/input_corner_radius_expressive"
-                app:boxCornerRadiusTopEnd="@dimen/input_corner_radius_expressive"
-                app:boxCornerRadiusTopStart="@dimen/input_corner_radius_expressive">
+                android:hint="@string/report_filter_from"
+                app:boxCornerRadiusBottomEnd="12dp"
+                app:boxCornerRadiusBottomStart="12dp"
+                app:boxCornerRadiusTopEnd="12dp"
+                app:boxCornerRadiusTopStart="12dp">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etFromDate"
@@ -70,9 +95,9 @@
                     android:cursorVisible="false"
                     android:focusable="false"
                     android:inputType="none"
-                    android:minHeight="44dp"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp"
+                    android:minHeight="42dp"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
                     android:textSize="13sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -81,13 +106,13 @@
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
+                android:layout_marginStart="3dp"
                 android:layout_weight="1"
-                android:hint="To"
-                app:boxCornerRadiusBottomEnd="@dimen/input_corner_radius_expressive"
-                app:boxCornerRadiusBottomStart="@dimen/input_corner_radius_expressive"
-                app:boxCornerRadiusTopEnd="@dimen/input_corner_radius_expressive"
-                app:boxCornerRadiusTopStart="@dimen/input_corner_radius_expressive">
+                android:hint="@string/report_filter_to"
+                app:boxCornerRadiusBottomEnd="12dp"
+                app:boxCornerRadiusBottomStart="12dp"
+                app:boxCornerRadiusTopEnd="12dp"
+                app:boxCornerRadiusTopStart="12dp">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etToDate"
@@ -97,109 +122,187 @@
                     android:cursorVisible="false"
                     android:focusable="false"
                     android:inputType="none"
-                    android:minHeight="44dp"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp"
+                    android:minHeight="42dp"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
                     android:textSize="13sp" />
             </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSearchReport"
+                android:layout_width="wrap_content"
+                android:layout_height="42dp"
+                android:layout_marginStart="6dp"
+                android:minWidth="84dp"
+                android:text="@string/report_filter_search"
+                android:textAllCaps="false"
+                android:textSize="12sp"
+                app:cornerRadius="18dp"
+                app:icon="@drawable/ic_search"
+                app:iconGravity="textStart"
+                app:iconPadding="3dp" />
         </LinearLayout>
 
-        <!-- Dropdowns (Region & Area) -->
         <LinearLayout
+            android:id="@+id/regionAreaRow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="6dp"
             android:baselineAligned="false"
             android:orientation="horizontal">
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/regionFilterContainer"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
+                android:layout_marginEnd="3dp"
                 android:layout_weight="1"
-                android:hint="Region">
+                android:hint="@string/report_filter_region">
 
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="44dp"
+                    android:layout_height="46dp"
                     android:background="@drawable/bg_spinner"
-                    android:paddingStart="8dp"
+                    android:paddingStart="4dp"
                     android:paddingEnd="4dp">
 
                     <Spinner
                         android:id="@+id/spinnerRegion"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:background="@null"
+                        android:paddingStart="0dp"
+                        android:paddingEnd="34dp"
                         android:spinnerMode="dropdown" />
+
+                    <ImageView
+                        android:layout_width="26dp"
+                        android:layout_height="26dp"
+                        android:layout_gravity="end|center_vertical"
+                        android:background="@drawable/bg_report_spinner_badge"
+                        android:contentDescription="@null"
+                        android:padding="5dp"
+                        android:src="@drawable/ic_spinner_chevron"
+                        app:tint="@color/google_blue" />
                 </FrameLayout>
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/areaFilterContainer"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
+                android:layout_marginStart="3dp"
                 android:layout_weight="1"
-                android:hint="Area">
+                android:hint="@string/report_filter_area">
 
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="44dp"
+                    android:layout_height="46dp"
                     android:background="@drawable/bg_spinner"
-                    android:paddingStart="8dp"
+                    android:paddingStart="4dp"
                     android:paddingEnd="4dp">
 
                     <Spinner
                         android:id="@+id/spinnerArea"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:background="@null"
+                        android:paddingStart="0dp"
+                        android:paddingEnd="34dp"
                         android:spinnerMode="dropdown" />
+
+                    <ImageView
+                        android:layout_width="26dp"
+                        android:layout_height="26dp"
+                        android:layout_gravity="end|center_vertical"
+                        android:background="@drawable/bg_report_spinner_badge"
+                        android:contentDescription="@null"
+                        android:padding="5dp"
+                        android:src="@drawable/ic_spinner_chevron"
+                        app:tint="@color/google_blue" />
                 </FrameLayout>
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
-        <!-- Territory & Search Button -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"
             android:baselineAligned="false"
-            android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/subAreaFilterContainer"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
+                android:layout_marginEnd="3dp"
                 android:layout_weight="1"
-                android:hint="Territory">
+                android:hint="@string/report_filter_sub_area">
 
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="44dp"
+                    android:layout_height="46dp"
                     android:background="@drawable/bg_spinner"
-                    android:paddingStart="8dp"
+                    android:paddingStart="4dp"
+                    android:paddingEnd="4dp">
+
+                    <Spinner
+                        android:id="@+id/spinnerSubArea"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@null"
+                        android:paddingStart="0dp"
+                        android:paddingEnd="34dp"
+                        android:spinnerMode="dropdown" />
+
+                    <ImageView
+                        android:layout_width="26dp"
+                        android:layout_height="26dp"
+                        android:layout_gravity="end|center_vertical"
+                        android:background="@drawable/bg_report_spinner_badge"
+                        android:contentDescription="@null"
+                        android:padding="5dp"
+                        android:src="@drawable/ic_spinner_chevron"
+                        app:tint="@color/google_blue" />
+                </FrameLayout>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/territoryFilterContainer"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="3dp"
+                android:layout_weight="1"
+                android:hint="@string/report_filter_territory">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="46dp"
+                    android:background="@drawable/bg_spinner"
+                    android:paddingStart="4dp"
                     android:paddingEnd="4dp">
 
                     <Spinner
                         android:id="@+id/spinnerTerritory"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:background="@null"
+                        android:paddingStart="0dp"
+                        android:paddingEnd="34dp"
                         android:spinnerMode="dropdown" />
+
+                    <ImageView
+                        android:layout_width="26dp"
+                        android:layout_height="26dp"
+                        android:layout_gravity="end|center_vertical"
+                        android:background="@drawable/bg_report_spinner_badge"
+                        android:contentDescription="@null"
+                        android:padding="5dp"
+                        android:src="@drawable/ic_spinner_chevron"
+                        app:tint="@color/google_blue" />
                 </FrameLayout>
             </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnSearchReport"
-                android:layout_width="wrap_content"
-                android:layout_height="44dp"
-                android:minWidth="96dp"
-                android:text="Search"
-                android:textAllCaps="false"
-                android:textSize="14sp"
-                app:cornerRadius="@dimen/button_corner_radius_expressive"
-                app:icon="@drawable/ic_search"
-                app:iconGravity="textStart"
-                app:iconPadding="6dp" />
         </LinearLayout>
-
+        </LinearLayout>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

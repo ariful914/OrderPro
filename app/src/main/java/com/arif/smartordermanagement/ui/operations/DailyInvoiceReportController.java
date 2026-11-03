@@ -3,6 +3,7 @@ package com.arif.smartordermanagement.ui.operations;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.arif.smartordermanagement.FilterSharedViewModel;
 import com.arif.smartordermanagement.R;
 import com.arif.smartordermanagement.model.ReportFilter;
 import com.arif.smartordermanagement.model.SalesInvoice;
@@ -33,6 +35,7 @@ final class DailyInvoiceReportController {
     private final LinearLayout content;
     private final LifecycleOwner lifecycleOwner;
     private final DailyInvoiceReportViewModel viewModel;
+    private final FilterSharedViewModel filterSharedViewModel;
     private final TextView[] metricValues = new TextView[3];
     private final TextView[] brandValues = new TextView[5];
     private final MaterialButton[] filterButtons = new MaterialButton[4];
@@ -41,21 +44,24 @@ final class DailyInvoiceReportController {
     private SalesInvoiceAdapter adapter;
     private RecyclerView invoiceList;
     private TextView emptyState;
+    private View invoiceProgressIndicator;
     private MaterialButtonToggleGroup statusFilters;
     private View filterOptionsContent;
     private View filterOptionsHeader;
-    private TextView filterOptionsIcon;
+    private ImageView filterOptionsIcon;
     private String lastShownError;
     private List<SalesInvoice> renderedInvoices;
     private String renderedStatus;
 
     DailyInvoiceReportController(@NonNull Context context, @NonNull LinearLayout content,
                                  @NonNull LifecycleOwner lifecycleOwner,
-                                 @NonNull DailyInvoiceReportViewModel viewModel) {
+                                 @NonNull DailyInvoiceReportViewModel viewModel,
+                                 @NonNull FilterSharedViewModel filterSharedViewModel) {
         this.context = context;
         this.content = content;
         this.lifecycleOwner = lifecycleOwner;
         this.viewModel = viewModel;
+        this.filterSharedViewModel = filterSharedViewModel;
     }
 
     void render() {
@@ -64,12 +70,14 @@ final class DailyInvoiceReportController {
         content.addView(report);
 
         ReportHeaderFilterView filterView = report.findViewById(R.id.reportHeaderFilter);
+        filterView.setSharedViewModel(filterSharedViewModel);
         filterView.setOnSearchClickListener(this::confirmSearch);
         filterOptionsContent = filterView;
         filterOptionsHeader = report.findViewById(R.id.filterOptionsHeader);
         filterOptionsIcon = report.findViewById(R.id.filterOptionsIcon);
         filterOptionsHeader.setOnClickListener(view -> setFilterExpanded(
                 filterOptionsContent.getVisibility() != View.VISIBLE));
+        setFilterExpanded(true);
 
         metricValues[0] = report.findViewById(R.id.totalSalesValue);
         metricValues[1] = report.findViewById(R.id.discountValue);
@@ -96,6 +104,7 @@ final class DailyInvoiceReportController {
         });
 
         emptyState = report.findViewById(R.id.emptyState);
+        invoiceProgressIndicator = report.findViewById(R.id.invoiceProgressIndicator);
         invoiceList = report.findViewById(R.id.invoiceList);
         invoiceList.setLayoutManager(new LinearLayoutManager(context));
         invoiceList.setNestedScrollingEnabled(false);
@@ -116,6 +125,7 @@ final class DailyInvoiceReportController {
         adapter = null;
         invoiceList = null;
         emptyState = null;
+        invoiceProgressIndicator = null;
         statusFilters = null;
         filterOptionsContent = null;
         filterOptionsHeader = null;
@@ -124,6 +134,7 @@ final class DailyInvoiceReportController {
 
     private void confirmSearch(ReportFilter filter) {
         new MaterialAlertDialogBuilder(context)
+                .setIcon(R.drawable.ic_filter)
                 .setTitle("Confirm report filters")
                 .setMessage(filterConfirmation(filter))
                 .setNegativeButton("Edit", (dialog, which) -> dialog.dismiss())
@@ -176,6 +187,9 @@ final class DailyInvoiceReportController {
             filterButtons[i].setContentDescription(labels[i] + ", " + counts[i] + " invoices");
         }
 
+        if (invoiceProgressIndicator != null) {
+            invoiceProgressIndicator.setVisibility(state.isLoading ? View.VISIBLE : View.GONE);
+        }
         if (state.isLoading) {
             invoiceList.setVisibility(View.GONE);
             emptyState.setText(R.string.daily_invoice_loading);
@@ -214,12 +228,17 @@ final class DailyInvoiceReportController {
     }
 
     private String filterConfirmation(ReportFilter filter) {
+        String zone = filter.getZone() != null ? filter.getZone().getName() : "All Zones";
         String region = filter.getRegion() != null ? filter.getRegion().getName() : "All Regions";
         String area = filter.getArea() != null ? filter.getArea().getName() : "All Areas";
+        String subArea = filter.getSubArea() != null
+                ? filter.getSubArea().getName() : "All Sub-areas";
         String territory = filter.getTerritory() != null
                 ? filter.getTerritory().getName() : "All Territories";
         return "Date: " + filter.getFromDate() + " – " + filter.getToDate()
-                + "\nRegion: " + region + "\nArea: " + area + "\nTerritory: " + territory
+                + "\nZone: " + zone + "\nRegion: " + region
+                + "\nArea: " + area + "\nSub-area: " + subArea
+                + "\nTerritory: " + territory
                 + "\n\nSearch with these filters?";
     }
 

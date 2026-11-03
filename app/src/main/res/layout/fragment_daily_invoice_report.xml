@@ -34,15 +34,16 @@
                 android:textStyle="bold"
                 app:drawableStartCompat="@drawable/ic_filter" />
 
-            <TextView
+            <ImageView
                 android:id="@+id/filterOptionsIcon"
-                android:layout_width="32dp"
-                android:layout_height="match_parent"
-                android:gravity="center"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="@drawable/bg_report_spinner_badge"
+                android:contentDescription="@null"
                 android:importantForAccessibility="no"
-                android:text="⌄"
-                android:textColor="@color/google_blue"
-                android:textSize="22sp" />
+                android:padding="6dp"
+                android:src="@drawable/ic_spinner_chevron"
+                app:tint="@color/google_blue" />
         </LinearLayout>
 
         <com.arif.smartordermanagement.ui.common.ReportHeaderFilterView
@@ -466,6 +467,18 @@
         android:textColor="@color/on_surface_light"
         android:textSize="18sp"
         android:textStyle="bold" />
+
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/invoiceProgressIndicator"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="8dp"
+        android:visibility="gone"
+        app:indicatorSize="36dp"
+        app:trackThickness="4dp"
+        app:indicatorColor="@color/google_blue" />
 
     <TextView
         android:id="@+id/emptyState"

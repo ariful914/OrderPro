@@ -92,16 +92,16 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
-            <TextView
+            <ImageView
                 android:id="@+id/employeeExpandIcon"
-                android:layout_width="24dp"
-                android:layout_height="36dp"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:layout_marginStart="4dp"
-                android:gravity="center"
+                android:background="@drawable/bg_report_spinner_badge"
                 android:importantForAccessibility="no"
-                android:text="⌄"
-                android:textColor="@color/google_blue"
-                android:textSize="20sp" />
+                android:padding="5dp"
+                android:src="@drawable/ic_spinner_chevron"
+                app:tint="@color/google_blue" />
         </LinearLayout>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

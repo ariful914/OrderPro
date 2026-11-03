@@ -1,6 +1,7 @@
 package com.arif.smartordermanagement.network;
 
 import com.arif.smartordermanagement.model.ApiResponse;
+import com.arif.smartordermanagement.model.Area;
 import com.arif.smartordermanagement.model.CategorySales;
 import com.arif.smartordermanagement.model.KpiMetric;
 import com.arif.smartordermanagement.model.Order;
@@ -8,7 +9,11 @@ import com.arif.smartordermanagement.model.ProductInfo;
 import com.arif.smartordermanagement.model.SalesInvoice;
 import com.arif.smartordermanagement.model.SalesTarget;
 import com.arif.smartordermanagement.model.SalesTrend;
+import com.arif.smartordermanagement.model.SubArea;
+import com.arif.smartordermanagement.model.Territory;
 import com.arif.smartordermanagement.model.User;
+import com.arif.smartordermanagement.model.Region;
+import com.arif.smartordermanagement.util.Constants;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -17,6 +22,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface ApiInterface {
@@ -41,6 +47,19 @@ public interface ApiInterface {
 
     @POST("orders")
     Call<ApiResponse<Order>> createOrder(@Body CreateOrderRequest request);
+
+    @GET("location/regions-by-zone/{zoneId}")
+    Call<ApiResponse<List<Region>>> getRegionsByZone(@Path("zoneId") String zoneId);
+
+    @GET("location/areas-by-region/{regionId}")
+    Call<ApiResponse<List<Area>>> getAreasByRegion(@Path("regionId") String regionId);
+
+    @GET("location/sub-areas-by-area/{areaId}")
+    Call<ApiResponse<List<SubArea>>> getSubAreasByArea(@Path("areaId") String areaId);
+
+    @GET("location/territories-by-sub-area/{subAreaId}")
+    Call<ApiResponse<List<Territory>>> getTerritoriesBySubArea(
+            @Path("subAreaId") String subAreaId);
 
     @POST("sales-report/sales")
     Call<ApiResponse<List<SalesInvoice>>> getSalesReport(@Body SalesReportRequest request);

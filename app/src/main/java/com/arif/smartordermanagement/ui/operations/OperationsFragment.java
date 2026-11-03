@@ -10,12 +10,13 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.arif.smartordermanagement.FilterSharedViewModel;
+import com.arif.smartordermanagement.FilterSharedViewModelFactory;
 import com.arif.smartordermanagement.R;
 import com.arif.smartordermanagement.data.DemoOperationsStore;
 import com.arif.smartordermanagement.databinding.FragmentOperationsBinding;
 import com.arif.smartordermanagement.databinding.LayoutOrderEntryBinding;
 import com.arif.smartordermanagement.databinding.LayoutSalesTargetSubmitBinding;
-import com.arif.smartordermanagement.model.ReportFilter;
 import com.arif.smartordermanagement.network.RetrofitClient;
 import com.arif.smartordermanagement.ui.common.ReportHeaderFilterView;
 import com.google.android.material.button.MaterialButton;
@@ -57,6 +58,7 @@ public class OperationsFragment extends Fragment {
     private FragmentOperationsBinding binding;
     private DailyInvoiceReportController dailyInvoiceReportController;
     private DailyInvoiceReportViewModel dailyInvoiceReportViewModel;
+    private FilterSharedViewModel filterSharedViewModel;
     private SalesTargetViewModel salesTargetViewModel;
     private SalesTargetSubmitController targetSubmitController;
     private SalesTargetReportController targetReportController;
@@ -88,8 +90,12 @@ public class OperationsFragment extends Fragment {
         binding.operationsToolbar.setNavigationOnClickListener(v -> getParentFragmentManager().popBackStack());
         binding.fabCreateTarget.setOnClickListener(v -> navigateTo(TARGET_SUBMIT));
         operationsTabComponent = new OperationsTabComponent(requireContext(), binding.operationsContent);
+        filterSharedViewModel = new ViewModelProvider(
+                requireActivity(), new FilterSharedViewModelFactory(requireActivity().getApplication()))
+                .get(FilterSharedViewModel.class);
         operationsUiComponents = new OperationsUiComponents(
-                requireContext(), binding.operationsContent, this::navigateTo, this::showMessage);
+                requireContext(), binding.operationsContent, this::navigateTo, this::showMessage,
+                filterSharedViewModel);
         salesReportController = new SalesReportController(operationsUiComponents);
         renderDestination(destination);
     }
@@ -293,12 +299,12 @@ public class OperationsFragment extends Fragment {
         if (DAILY_INVOICE.equals(destination)) {
 
             if (dailyInvoiceReportViewModel == null) {
-                dailyInvoiceReportViewModel = new ViewModelProvider(this)
+                dailyInvoiceReportViewModel = new ViewModelProvider(requireActivity())
                         .get(DailyInvoiceReportViewModel.class);
             }
             dailyInvoiceReportController = new DailyInvoiceReportController(
                     requireContext(), binding.operationsContent, getViewLifecycleOwner(),
-                    dailyInvoiceReportViewModel);
+                    dailyInvoiceReportViewModel, filterSharedViewModel);
             dailyInvoiceReportController.render();
             return;
         }
